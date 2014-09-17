@@ -63,4 +63,9 @@
     return thisController;
 }
 
+- (NSArray*)vdNavigationController:(VDNavigationController *)navigationController barButtonItemsForIndex:(NSIndexPath *)index {
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"sdoij" style:UIBarButtonItemStyleDone target:nil action:NULL];
+    return @[barButtonItem];
+}
+
 @end

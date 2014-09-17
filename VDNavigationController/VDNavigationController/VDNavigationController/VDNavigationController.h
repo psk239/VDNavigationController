@@ -22,6 +22,6 @@
 
 @protocol VDNavigationControllerDelegate <NSObject>
 
-- (UIViewController*)vdNavigationController:(VDNavigationController*)controller controllerAtIndex:(NSIndexPath*)index;
+- (UIViewController*)vdNavigationController:(VDNavigationController*)navigationController controllerAtIndex:(NSIndexPath*)index;
 
 @end
