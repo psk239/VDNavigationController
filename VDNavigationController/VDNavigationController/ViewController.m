@@ -27,6 +27,17 @@ NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
     [self reloadData];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    NSLog(@"Navigation controller = %@", self.navigationController);
+    
+    if (!self.navigationItem.leftBarButtonItem) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)];
+    }
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -40,13 +51,13 @@ NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
     return 10;
 }
 
-- (UICollectionViewCell *)vdNavigationController:(VDNavigationController *)vdController cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)vdNavigationController:(VDCollectionMenuController *)vdController cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CollectionViewCell *cell = (CollectionViewCell *)[vdController dequeueReusableCellForIdentifier:ReuseCellIdentifier forIndexPath:indexPath];
     cell.titleLabel.text = @"Cell";
     return cell;
 }
 
-- (UIViewController *)vdNavigationController:(VDNavigationController *)vdController viewControllerAtIndex:(NSIndexPath *)indexPath {
+- (UIViewController *)vdNavigationController:(VDCollectionMenuController *)vdController viewControllerAtIndex:(NSIndexPath *)indexPath {
     return nil;
 }
 

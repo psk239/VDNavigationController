@@ -8,8 +8,10 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "SecondViewController.h"
+#import "VDNavigationController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <VDNavigationControllerDelegate>
 
 @end
 
@@ -23,9 +25,13 @@
     
     ViewController *rootViewController = [ViewController new];
     rootViewController.sectionNames = @[@"name 1", @"name 2"];
-    self.window.rootViewController = rootViewController;
-    [self.window makeKeyAndVisible];
     
+    VDNavigationController *navigationController = [[VDNavigationController alloc] initWithRootViewController:rootViewController];
+    navigationController.vdNavigationControllerDelegate = self;
+    navigationController.view.backgroundColor = [UIColor blueColor];
+    self.window.rootViewController = navigationController;
+    [self.window makeKeyAndVisible];
+        
     return YES;
 }
 
@@ -49,6 +55,12 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (UIViewController*)vdNavigationController:(VDNavigationController *)controller controllerAtIndex:(NSIndexPath *)index {
+    SecondViewController *thisController = [[SecondViewController alloc] init];
+    controller.view.backgroundColor = [UIColor greenColor];
+    return thisController;
 }
 
 @end

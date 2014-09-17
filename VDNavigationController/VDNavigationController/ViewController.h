@@ -6,9 +6,9 @@
 //
 //
 
-#import "VDNavigationController.h"
+#import "VDCollectionMenuController.h"
 
-@interface ViewController : VDNavigationController
+@interface ViewController : VDCollectionMenuController
 
 
 @end
