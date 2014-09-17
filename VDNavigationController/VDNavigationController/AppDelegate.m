@@ -20,7 +20,10 @@
     // Override point for customization after application launch.
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[VDNavigationController alloc] init];
+    
+    VDNavigationController *rootViewController = [VDNavigationController new];
+    rootViewController.sectionNames = @[@"name 1", @"name 2"];
+    self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
     
     return YES;
