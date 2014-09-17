@@ -20,6 +20,8 @@
 - (void)reloadData;
 - (UIButton*)sectionButtonTemplate;
 - (void)setSegmentedButtonColor:(UIColor*)color forControlState:(UIControlState)state;
+- (void)registerWithCollectionViewCellClass:(Class)collectionViewCellClass forReuseIdentifier:(NSString*)reuseIdentifier;
+- (UICollectionViewCell*)dequeueReusableCellForIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath;
 
 @end
 

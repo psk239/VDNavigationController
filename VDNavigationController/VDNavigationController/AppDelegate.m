@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "VDNavigationController.h"
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -21,7 +21,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    VDNavigationController *rootViewController = [VDNavigationController new];
+    ViewController *rootViewController = [ViewController new];
     rootViewController.sectionNames = @[@"name 1", @"name 2"];
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];

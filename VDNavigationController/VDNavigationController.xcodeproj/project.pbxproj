@@ -13,6 +13,7 @@
 		69D4558119C8F4500031D4C3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D4558019C8F4500031D4C3 /* Images.xcassets */; };
 		69D4559019C8F4500031D4C3 /* VDNavigationControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4558F19C8F4500031D4C3 /* VDNavigationControllerTests.m */; };
 		69D4559C19C8F4B40031D4C3 /* VDNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4559B19C8F4B40031D4C3 /* VDNavigationController.m */; };
+		69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D455A319C9182B0031D4C3 /* CollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,8 @@
 		69D4558F19C8F4500031D4C3 /* VDNavigationControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VDNavigationControllerTests.m; sourceTree = "<group>"; };
 		69D4559A19C8F4B40031D4C3 /* VDNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDNavigationController.h; sourceTree = "<group>"; };
 		69D4559B19C8F4B40031D4C3 /* VDNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDNavigationController.m; sourceTree = "<group>"; };
+		69D455A219C9182B0031D4C3 /* CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
+		69D455A319C9182B0031D4C3 /* CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,8 @@
 				69D4557819C8F4500031D4C3 /* AppDelegate.m */,
 				69D4557A19C8F4500031D4C3 /* ViewController.h */,
 				69D4557B19C8F4500031D4C3 /* ViewController.m */,
+				69D455A219C9182B0031D4C3 /* CollectionViewCell.h */,
+				69D455A319C9182B0031D4C3 /* CollectionViewCell.m */,
 				69D4559919C8F49E0031D4C3 /* VDNavigationController */,
 				69D4558019C8F4500031D4C3 /* Images.xcassets */,
 				69D4557319C8F4500031D4C3 /* Supporting Files */,
@@ -224,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				69D4557C19C8F4500031D4C3 /* ViewController.m in Sources */,
+				69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */,
 				69D4559C19C8F4B40031D4C3 /* VDNavigationController.m in Sources */,
 				69D4557919C8F4500031D4C3 /* AppDelegate.m in Sources */,
 				69D4557619C8F4500031D4C3 /* main.m in Sources */,

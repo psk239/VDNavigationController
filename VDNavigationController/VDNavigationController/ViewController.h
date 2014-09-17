@@ -6,9 +6,9 @@
 //
 //
 
-#import <UIKit/UIKit.h>
+#import "VDNavigationController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : VDNavigationController
 
 
 @end

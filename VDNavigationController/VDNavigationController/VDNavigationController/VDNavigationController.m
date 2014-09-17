@@ -7,6 +7,7 @@
 //
 
 #import "VDNavigationController.h"
+#import "CollectionViewCell.h"
 
 static CGFloat const VDSegmentedButtonHeight = 44.0f;
 
@@ -196,6 +197,9 @@ static CGFloat const VDSegmentedButtonHeight = 44.0f;
     return _buttonColorsDict;
 }
 
+- (UICollectionViewCell*)dequeueReusableCellForIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath {
+    return [self.collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+}
 
 - (BOOL)displaySegmentedControl {
     return [self.sectionNames count] > 1;
@@ -234,6 +238,10 @@ static CGFloat const VDSegmentedButtonHeight = 44.0f;
             }
         }];
     }
+}
+
+- (void)registerWithCollectionViewCellClass:(Class)collectionViewCellClass forReuseIdentifier:(NSString*)reuseIdentifier {
+    [self.collectionView registerClass:collectionViewCellClass forCellWithReuseIdentifier:reuseIdentifier];
 }
 
 - (void)reloadData {
