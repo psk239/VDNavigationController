@@ -116,7 +116,7 @@
 }
 
 - (IBAction)menuButtonPressed:(id)sender {
-    NSLog(@"View Controllers = %@", [self  viewControllers]);
+
     if ([self baseViewControllerVisible]) {
         [self hideMenuAnimated:YES];
     } else {
@@ -131,6 +131,11 @@
 - (void)showMenuAnimated:(BOOL)animated {
     
     if (![self baseViewControllerVisible]) {
+        
+        if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)]) {
+            [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
+        }
+        
         [UIView animateWithDuration:0.25 animations:^{
             self.rootViewController.view.frame = [self dismissedViewFrame];
         } completion:^(BOOL finished) {
@@ -138,6 +143,10 @@
             [self.cachedSuperView addSubview:self.drawerController.view];
         
             [self.rootViewController.view removeFromSuperview];
+            
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)]) {
+                [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
+            }
         }];
     }
 }
@@ -146,6 +155,10 @@
     
     if ([self baseViewControllerVisible]) {
 
+        if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillDismissDrawer:)]) {
+            [self.vdNavigationControllerDelegate vdNavigationControllerWillDismissDrawer:self];
+        }
+
         [self.cachedSuperView addSubview:self.rootViewController.view];
         [UIView animateWithDuration:0.25f animations:^{
             self.rootViewController.view.frame = [self presentedViewFrame];
@@ -153,6 +166,9 @@
             [self.view addSubview:self.drawerController.view];
             [self.view sendSubviewToBack:self.drawerController.view];
 
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)]) {
+                [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
+            }
         }];
     }
 }

@@ -14,7 +14,7 @@
 
 NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
 
-@interface ViewController ()
+@interface ViewController () <VDNavigationControllerDelegate>
 
 @end
 
@@ -37,6 +37,8 @@ NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
 
     [self.view addSubview:secondVCBtn];
     [self.view addSubview:thirdVCBtn];
+    
+    self.vdNavController.vdNavigationControllerDelegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -48,17 +50,35 @@ NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
 }
 
 - (void)secondVCBtnPressed:(id)sender {
-    NSLog(@"Second vc button pressed");
     SecondViewController *secondViewController = [[SecondViewController alloc] init];
     [[self vdNavController] switchToViewController:secondViewController animated:YES];
 }
 
 - (void)thirdVCBtnPressed:(id)sender {
-    NSLog(@"Third vc button pressed");
     ThirdViewController *thirdViewController = [[ThirdViewController alloc] init];
     [[self vdNavController] switchToViewController:thirdViewController animated:YES];
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - VDNavigationDelegate Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)vdNavigationControllerWillPresentDrawer:(VDNavigationController *)navController {
+    
+    for (UIView *view in self.view.subviews) {
+        if ([[view class] isSubclassOfClass:[UIButton class]]) {
+            view.alpha = 0.0f;
+        }
+    }
+    
+    [UIView animateWithDuration:0.5f animations:^{
+        for (UIView *view in self.view.subviews) {
+            if ([[view class] isSubclassOfClass:[UIButton class]]) {
+                view.alpha = 1.0f;
+            }
+        }
+    }];
+}
 
 @end

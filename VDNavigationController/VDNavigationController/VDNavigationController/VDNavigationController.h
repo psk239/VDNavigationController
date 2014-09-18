@@ -12,6 +12,7 @@
 @protocol  VDNavigationControllerDelegate;
 
 @interface VDNavigationController : UINavigationController
+@property (nonatomic, weak) id<VDNavigationControllerDelegate> vdNavigationControllerDelegate;
 @property (nonatomic, strong) NSIndexPath *selectedIndex;
 @property (nonatomic, strong) VDDrawerViewController *drawerController;
 
@@ -21,5 +22,16 @@
 
 - (void)showMenuAnimated:(BOOL)animated;
 - (void)hideMenuAnimated:(BOOL)animated;
+
+@end
+
+@protocol VDNavigationControllerDelegate <NSObject>
+
+@optional
+- (void)vdNavigationControllerWillPresentDrawer:(VDNavigationController*)navController;
+- (void)vdNavigationControllerDidPresentDrawer:(VDNavigationController*)navController;
+
+- (void)vdNavigationControllerWillDismissDrawer:(VDNavigationController*)navController;
+- (void)vdNavigationControllerDidDismissDrawer:(VDNavigationController*)navController;
 
 @end
