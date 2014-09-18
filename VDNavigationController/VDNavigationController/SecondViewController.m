@@ -7,6 +7,7 @@
 //
 
 #import "SecondViewController.h"
+#import "ThirdViewController.h"
 
 @interface SecondViewController ()
 
@@ -25,7 +26,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"This one" style:UIBarButtonItemStyleDone target:self action:@selector(buttonPressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(buttonPressed:)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,7 +35,8 @@
 }
 
 - (void)buttonPressed:(id)sender {
-    
+    ThirdViewController *thirdViewController = [[ThirdViewController alloc] init];
+    [self.navigationController pushViewController:thirdViewController animated:YES];
 }
 
 /*

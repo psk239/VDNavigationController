@@ -11,7 +11,7 @@
 #import "SecondViewController.h"
 #import "VDNavigationController.h"
 
-@interface AppDelegate () <VDNavigationControllerDelegate>
+@interface AppDelegate ()
 
 @end
 
@@ -26,9 +26,16 @@
     ViewController *rootViewController = [ViewController new];
     rootViewController.sectionNames = @[@"name 1", @"name 2"];
     
-    VDNavigationController *navigationController = [[VDNavigationController alloc] initWithRootViewController:rootViewController];
-    navigationController.vdNavigationControllerDelegate = self;
+    SecondViewController *controller = [[SecondViewController alloc] init];
+    controller.view.backgroundColor = [UIColor greenColor];
+    
+    VDNavigationController *navigationController = [[VDNavigationController alloc] initWithRootViewController:controller];
+    navigationController.drawerController = rootViewController;
     navigationController.view.backgroundColor = [UIColor blueColor];
+    
+    controller.view.backgroundColor = [UIColor greenColor];
+    controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:navigationController action:@selector(menuButtonPressed:)];
+
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
         
@@ -55,17 +62,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
-- (UIViewController*)vdNavigationController:(VDNavigationController *)controller controllerAtIndex:(NSIndexPath *)index {
-    SecondViewController *thisController = [[SecondViewController alloc] init];
-    controller.view.backgroundColor = [UIColor greenColor];
-    return thisController;
-}
-
-- (NSArray*)vdNavigationController:(VDNavigationController *)navigationController barButtonItemsForIndex:(NSIndexPath *)index {
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"sdoij" style:UIBarButtonItemStyleDone target:nil action:NULL];
-    return @[barButtonItem];
 }
 
 @end

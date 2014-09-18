@@ -11,17 +11,13 @@
 @protocol  VDNavigationControllerDelegate;
 
 @interface VDNavigationController : UINavigationController
-@property (nonatomic, weak) id<VDNavigationControllerDelegate> vdNavigationControllerDelegate;
 @property (nonatomic, strong) NSIndexPath *selectedIndex;
-@property (nonatomic, strong) UIViewController *baseViewController;
+@property (nonatomic, strong) UIViewController *drawerController;
+
+
+- (IBAction)menuButtonPressed:(id)sender;
 
 - (void)showMenuAnimated:(BOOL)animated;
 - (void)hideMenuAnimated:(BOOL)animated;
-
-@end
-
-@protocol VDNavigationControllerDelegate <NSObject>
-
-- (UIViewController*)vdNavigationController:(VDNavigationController*)navigationController controllerAtIndex:(NSIndexPath*)index;
 
 @end

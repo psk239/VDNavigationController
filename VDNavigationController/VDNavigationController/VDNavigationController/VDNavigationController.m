@@ -8,8 +8,8 @@
 
 #import "VDNavigationController.h"
 
-@interface VDNavigationController ()
-
+@interface VDNavigationController () <UINavigationControllerDelegate>
+@property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
 @property (nonatomic, strong) NSArray *cachedRightBarButtonItems;
 
@@ -19,7 +19,7 @@
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
     if (self = [super initWithRootViewController:rootViewController]) {
-        _baseViewController = rootViewController;
+        _rootViewController = rootViewController;
     }
     return self;
 }
@@ -30,6 +30,7 @@
 
 - (void)loadView {
     [super loadView];
+        
 }
 
 - (void)viewDidLoad {
@@ -71,7 +72,7 @@
 }
 
 - (BOOL)baseViewControllerVisible {
-    return [self.childViewControllers count] == 1;
+    return self.rootViewController.view.frame.origin.y >= [UIScreen mainScreen].bounds.size.height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,12 +84,20 @@
     [self showMenuAnimated:YES];
 }
 
+- (void)setDrawerController:(UIViewController *)drawerController {
+    _drawerController = drawerController;
+    
+    self.drawerController.view.frame = [self presentedViewFrame];
+    [self.view addSubview:self.drawerController.view];
+    [self.view sendSubviewToBack:self.drawerController.view];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Actions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)menuButtonPressed:(id)sender {
+- (IBAction)menuButtonPressed:(id)sender {
     if ([self baseViewControllerVisible]) {
         [self hideMenuAnimated:YES];
     } else {
@@ -104,52 +113,18 @@
     
     if (![self baseViewControllerVisible]) {
         
-        UIViewController *childViewController = [self.childViewControllers lastObject];
-        if (childViewController) {
-            NSTimeInterval duration = (animated) ? 0.25f : 0.0f;
-            
-            [childViewController willMoveToParentViewController:nil];
-            childViewController.view.frame = [self presentedViewFrame];
-
-            self.baseViewController.title = self.cachedTitle;
-            
-            [UIView animateWithDuration:duration animations:^{
-                childViewController.view.frame = [self dismissedViewFrame];
-            } completion:^(BOOL finished) {
-                [childViewController removeFromParentViewController];
-                [self.baseViewController.navigationItem setRightBarButtonItems:self.cachedRightBarButtonItems animated:YES];
-            }];
-        }
+        [UIView animateWithDuration:0.25 animations:^{
+            self.rootViewController.view.frame = [self dismissedViewFrame];
+        }];
     }
 }
 
 - (void)hideMenuAnimated:(BOOL)animated {
     
     if ([self baseViewControllerVisible]) {
-        
-        self.cachedTitle = self.baseViewController.title;
-        
-        UIViewController *childViewController = [self.vdNavigationControllerDelegate vdNavigationController:self controllerAtIndex:self.selectedIndex];
-        
-        [self addChildViewController:childViewController];
-        childViewController.view.frame = [self dismissedViewFrame];
-        [self.view addSubview:childViewController.view];
 
-        [childViewController beginAppearanceTransition:YES animated:animated];
-        
-        self.baseViewController.title = childViewController.title;
-
-        NSTimeInterval duration = (animated) ? 0.25f : 0.0f;
-        
-        [UIView animateWithDuration:duration animations:^{
-            childViewController.view.frame = [self presentedViewFrame];
-        } completion:^(BOOL finished) {
-            [childViewController endAppearanceTransition];
-            [childViewController didMoveToParentViewController:self];
-            if (childViewController.navigationItem.rightBarButtonItems.count > 0) {
-                self.cachedRightBarButtonItems = self.baseViewController.navigationItem.rightBarButtonItems;
-                [self.baseViewController.navigationItem setRightBarButtonItems:childViewController.navigationItem.rightBarButtonItems animated:YES];
-            }
+        [UIView animateWithDuration:0.25f animations:^{
+            self.rootViewController.view.frame = [self presentedViewFrame];
         }];
     }
 }

@@ -16,6 +16,7 @@
 		69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D455A319C9182B0031D4C3 /* CollectionViewCell.m */; };
 		69E6DD8219CA0B530089A4EA /* VDNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E6DD8119CA0B530089A4EA /* VDNavigationController.m */; };
 		69E6DD8519CA4AC20089A4EA /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E6DD8419CA4AC20089A4EA /* SecondViewController.m */; };
+		69E6DD8819CA580E0089A4EA /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E6DD8719CA580E0089A4EA /* ThirdViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		69E6DD8119CA0B530089A4EA /* VDNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDNavigationController.m; sourceTree = "<group>"; };
 		69E6DD8319CA4AC20089A4EA /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
 		69E6DD8419CA4AC20089A4EA /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		69E6DD8619CA580E0089A4EA /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
+		69E6DD8719CA580E0089A4EA /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,8 @@
 				69D4557819C8F4500031D4C3 /* AppDelegate.m */,
 				69E6DD8319CA4AC20089A4EA /* SecondViewController.h */,
 				69E6DD8419CA4AC20089A4EA /* SecondViewController.m */,
+				69E6DD8619CA580E0089A4EA /* ThirdViewController.h */,
+				69E6DD8719CA580E0089A4EA /* ThirdViewController.m */,
 				69D4557A19C8F4500031D4C3 /* ViewController.h */,
 				69D4557B19C8F4500031D4C3 /* ViewController.m */,
 				69D455A219C9182B0031D4C3 /* CollectionViewCell.h */,
@@ -240,6 +245,7 @@
 			files = (
 				69D4557C19C8F4500031D4C3 /* ViewController.m in Sources */,
 				69E6DD8219CA0B530089A4EA /* VDNavigationController.m in Sources */,
+				69E6DD8819CA580E0089A4EA /* ThirdViewController.m in Sources */,
 				69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */,
 				69E6DD8519CA4AC20089A4EA /* SecondViewController.m in Sources */,
 				69D4559C19C8F4B40031D4C3 /* VDCollectionMenuController.m in Sources */,
