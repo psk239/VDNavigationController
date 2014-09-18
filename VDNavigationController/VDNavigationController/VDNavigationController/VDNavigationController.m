@@ -100,7 +100,7 @@
 #pragma mark - Actions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)switchToViewController:(UIViewController*)viewController {
+- (void)switchToViewController:(UIViewController*)viewController animated:(BOOL)animated {
     if (viewController) {
         [self.rootViewController.view removeFromSuperview];
         self.viewControllers = @[viewController];
@@ -108,6 +108,10 @@
         
         [self.view addSubview:self.drawerController.view];
         [self.view sendSubviewToBack:self.drawerController.view];
+        
+        self.rootViewController.view.frame = [self dismissedViewFrame];
+
+        [self hideMenuAnimated:animated];
     }
 }
 

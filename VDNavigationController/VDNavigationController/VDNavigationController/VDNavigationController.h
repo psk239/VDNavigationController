@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSIndexPath *selectedIndex;
 @property (nonatomic, strong) VDDrawerViewController *drawerController;
 
-- (void)switchToViewController:(UIViewController*)viewController;
+- (void)switchToViewController:(UIViewController*)viewController animated:(BOOL)animated;
 
 - (IBAction)menuButtonPressed:(id)sender;
 

@@ -50,13 +50,13 @@ NSString * const ReuseCellIdentifier = @"ReuseCellIdentifier";
 - (void)secondVCBtnPressed:(id)sender {
     NSLog(@"Second vc button pressed");
     SecondViewController *secondViewController = [[SecondViewController alloc] init];
-    [[self vdNavController] switchToViewController:secondViewController];
+    [[self vdNavController] switchToViewController:secondViewController animated:YES];
 }
 
 - (void)thirdVCBtnPressed:(id)sender {
     NSLog(@"Third vc button pressed");
     ThirdViewController *thirdViewController = [[ThirdViewController alloc] init];
-    [[self vdNavController] switchToViewController:thirdViewController];
+    [[self vdNavController] switchToViewController:thirdViewController animated:YES];
 
 }
 
