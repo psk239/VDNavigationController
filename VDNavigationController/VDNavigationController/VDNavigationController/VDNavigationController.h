@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class VDDrawerViewController;
 @protocol  VDNavigationControllerDelegate;
 
 @interface VDNavigationController : UINavigationController
 @property (nonatomic, strong) NSIndexPath *selectedIndex;
-@property (nonatomic, strong) UIViewController *drawerController;
+@property (nonatomic, strong) VDDrawerViewController *drawerController;
 
+- (void)switchToViewController:(UIViewController*)viewController;
 
 - (IBAction)menuButtonPressed:(id)sender;
 

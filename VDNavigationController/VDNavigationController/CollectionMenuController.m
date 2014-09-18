@@ -6,19 +6,19 @@
 //
 //
 
-#import "VDCollectionMenuController.h"
+#import "CollectionMenuController.h"
 #import "CollectionViewCell.h"
 
 static CGFloat const VDSegmentedButtonHeight = 44.0f;
 
-@interface VDCollectionMenuController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface CollectionMenuController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) NSArray *segmentedButtons;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableDictionary *buttonColorsDict;
 @property (nonatomic) NSInteger selectedIndex;
 @end
 
-@implementation VDCollectionMenuController
+@implementation CollectionMenuController
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Initializers

@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		69076BD919CB93FA0018F22B /* VDDrawerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69076BD819CB93FA0018F22B /* VDDrawerViewController.m */; };
+		69076BDC19CB95BA0018F22B /* CollectionMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69076BDB19CB95BA0018F22B /* CollectionMenuController.m */; };
 		69D4557619C8F4500031D4C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4557519C8F4500031D4C3 /* main.m */; };
 		69D4557919C8F4500031D4C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4557819C8F4500031D4C3 /* AppDelegate.m */; };
 		69D4557C19C8F4500031D4C3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4557B19C8F4500031D4C3 /* ViewController.m */; };
 		69D4558119C8F4500031D4C3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D4558019C8F4500031D4C3 /* Images.xcassets */; };
 		69D4559019C8F4500031D4C3 /* VDNavigationControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4558F19C8F4500031D4C3 /* VDNavigationControllerTests.m */; };
-		69D4559C19C8F4B40031D4C3 /* VDCollectionMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D4559B19C8F4B40031D4C3 /* VDCollectionMenuController.m */; };
 		69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D455A319C9182B0031D4C3 /* CollectionViewCell.m */; };
 		69E6DD8219CA0B530089A4EA /* VDNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E6DD8119CA0B530089A4EA /* VDNavigationController.m */; };
 		69E6DD8519CA4AC20089A4EA /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E6DD8419CA4AC20089A4EA /* SecondViewController.m */; };
@@ -30,6 +31,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		69076BD719CB93FA0018F22B /* VDDrawerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDDrawerViewController.h; sourceTree = "<group>"; };
+		69076BD819CB93FA0018F22B /* VDDrawerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDDrawerViewController.m; sourceTree = "<group>"; };
+		69076BDA19CB95BA0018F22B /* CollectionMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionMenuController.h; sourceTree = "<group>"; };
+		69076BDB19CB95BA0018F22B /* CollectionMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionMenuController.m; sourceTree = "<group>"; };
 		69D4557019C8F4500031D4C3 /* VDNavigationController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VDNavigationController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D4557419C8F4500031D4C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D4557519C8F4500031D4C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -41,8 +46,6 @@
 		69D4558919C8F4500031D4C3 /* VDNavigationControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VDNavigationControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D4558E19C8F4500031D4C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D4558F19C8F4500031D4C3 /* VDNavigationControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VDNavigationControllerTests.m; sourceTree = "<group>"; };
-		69D4559A19C8F4B40031D4C3 /* VDCollectionMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDCollectionMenuController.h; sourceTree = "<group>"; };
-		69D4559B19C8F4B40031D4C3 /* VDCollectionMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDCollectionMenuController.m; sourceTree = "<group>"; };
 		69D455A219C9182B0031D4C3 /* CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
 		69D455A319C9182B0031D4C3 /* CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 		69E6DD8019CA0B530089A4EA /* VDNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDNavigationController.h; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				69E6DD8719CA580E0089A4EA /* ThirdViewController.m */,
 				69D4557A19C8F4500031D4C3 /* ViewController.h */,
 				69D4557B19C8F4500031D4C3 /* ViewController.m */,
+				69076BDA19CB95BA0018F22B /* CollectionMenuController.h */,
+				69076BDB19CB95BA0018F22B /* CollectionMenuController.m */,
 				69D455A219C9182B0031D4C3 /* CollectionViewCell.h */,
 				69D455A319C9182B0031D4C3 /* CollectionViewCell.m */,
 				69D4559919C8F49E0031D4C3 /* VDNavigationController */,
@@ -138,10 +143,10 @@
 		69D4559919C8F49E0031D4C3 /* VDNavigationController */ = {
 			isa = PBXGroup;
 			children = (
-				69D4559A19C8F4B40031D4C3 /* VDCollectionMenuController.h */,
-				69D4559B19C8F4B40031D4C3 /* VDCollectionMenuController.m */,
 				69E6DD8019CA0B530089A4EA /* VDNavigationController.h */,
 				69E6DD8119CA0B530089A4EA /* VDNavigationController.m */,
+				69076BD719CB93FA0018F22B /* VDDrawerViewController.h */,
+				69076BD819CB93FA0018F22B /* VDDrawerViewController.m */,
 			);
 			path = VDNavigationController;
 			sourceTree = "<group>";
@@ -248,8 +253,9 @@
 				69E6DD8819CA580E0089A4EA /* ThirdViewController.m in Sources */,
 				69D455A419C9182B0031D4C3 /* CollectionViewCell.m in Sources */,
 				69E6DD8519CA4AC20089A4EA /* SecondViewController.m in Sources */,
-				69D4559C19C8F4B40031D4C3 /* VDCollectionMenuController.m in Sources */,
+				69076BD919CB93FA0018F22B /* VDDrawerViewController.m in Sources */,
 				69D4557919C8F4500031D4C3 /* AppDelegate.m in Sources */,
+				69076BDC19CB95BA0018F22B /* CollectionMenuController.m in Sources */,
 				69D4557619C8F4500031D4C3 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

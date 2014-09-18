@@ -20,12 +20,13 @@
     
     // Do any additional setup after loading the view.
     self.title = @"Second View Controller";
-    self.view.backgroundColor = [UIColor blueColor];
+    self.view.backgroundColor = [UIColor yellowColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)];
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(buttonPressed:)];
 }
 
@@ -35,8 +36,9 @@
 }
 
 - (void)buttonPressed:(id)sender {
-    ThirdViewController *thirdViewController = [[ThirdViewController alloc] init];
-    [self.navigationController pushViewController:thirdViewController animated:YES];
+    UIViewController *viewController = [[UIViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController.view.backgroundColor = [UIColor redColor];
 }
 
 /*

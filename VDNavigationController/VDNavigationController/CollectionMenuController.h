@@ -11,7 +11,7 @@
 @protocol VDNavigationControllerDataSource;
 @protocol VDNavigationControllerDelegate;
 
-@interface VDCollectionMenuController : UIViewController
+@interface CollectionMenuController : UIViewController
 //@property (nonatomic, weak) id<VDNavigationControllerDelegate> delegate;
 @property (nonatomic, weak) id<VDNavigationControllerDataSource> dataSource;
 @property (nonatomic, strong) NSArray *sectionNames;
@@ -28,12 +28,12 @@
 
 @required
 - (NSInteger)numberOfItemsInSection:(NSInteger)section;
-- (UICollectionViewCell*)vdNavigationController:(VDCollectionMenuController*)vdController cellForItemAtIndexPath:(NSIndexPath*)indexPath;
-- (UIViewController*)vdNavigationController:(VDCollectionMenuController*)vdController viewControllerAtIndex:(NSIndexPath*)indexPath;
+- (UICollectionViewCell*)vdNavigationController:(CollectionMenuController*)vdController cellForItemAtIndexPath:(NSIndexPath*)indexPath;
+- (UIViewController*)vdNavigationController:(CollectionMenuController*)vdController viewControllerAtIndex:(NSIndexPath*)indexPath;
 
 @optional
-- (NSArray*)vdNavigationController:(VDCollectionMenuController*)vdController leftBarButtonItemsForControllerAtIndex:(NSIndexPath*)indexPath;
-- (NSArray*)vdNavigationController:(VDCollectionMenuController*)vdController rightBarButtonItemsForControllerAtIndex:(NSIndexPath*)indexPath;
+- (NSArray*)vdNavigationController:(CollectionMenuController*)vdController leftBarButtonItemsForControllerAtIndex:(NSIndexPath*)indexPath;
+- (NSArray*)vdNavigationController:(CollectionMenuController*)vdController rightBarButtonItemsForControllerAtIndex:(NSIndexPath*)indexPath;
 
 @end
 

@@ -22,10 +22,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Third View Controller";
-    self.view.backgroundColor = [UIColor yellowColor];
+    self.view.backgroundColor = [UIColor purpleColor];
     // Do any additional setup after loading the view.
 
-    
+    if (!self.navigationItem.leftBarButtonItem) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)];
+    }
+
     self.navigationController.navigationBarHidden = NO;
 }
 

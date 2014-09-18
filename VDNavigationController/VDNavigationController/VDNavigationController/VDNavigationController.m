@@ -7,11 +7,13 @@
 //
 
 #import "VDNavigationController.h"
+#import "VDDrawerViewController.h"
 
 @interface VDNavigationController () <UINavigationControllerDelegate>
 @property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
 @property (nonatomic, strong) NSArray *cachedRightBarButtonItems;
+@property (nonatomic, strong) UIView *cachedSuperView;
 
 @end
 
@@ -84,8 +86,9 @@
     [self showMenuAnimated:YES];
 }
 
-- (void)setDrawerController:(UIViewController *)drawerController {
+- (void)setDrawerController:(VDDrawerViewController *)drawerController {
     _drawerController = drawerController;
+    _drawerController.vdNavController = self;
     
     self.drawerController.view.frame = [self presentedViewFrame];
     [self.view addSubview:self.drawerController.view];
@@ -97,7 +100,19 @@
 #pragma mark - Actions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)switchToViewController:(UIViewController*)viewController {
+    if (viewController) {
+        [self.rootViewController.view removeFromSuperview];
+        self.viewControllers = @[viewController];
+        self.rootViewController = viewController;
+        
+        [self.view addSubview:self.drawerController.view];
+        [self.view sendSubviewToBack:self.drawerController.view];
+    }
+}
+
 - (IBAction)menuButtonPressed:(id)sender {
+    NSLog(@"View Controllers = %@", [self  viewControllers]);
     if ([self baseViewControllerVisible]) {
         [self hideMenuAnimated:YES];
     } else {
@@ -112,9 +127,13 @@
 - (void)showMenuAnimated:(BOOL)animated {
     
     if (![self baseViewControllerVisible]) {
-        
         [UIView animateWithDuration:0.25 animations:^{
             self.rootViewController.view.frame = [self dismissedViewFrame];
+        } completion:^(BOOL finished) {
+            self.cachedSuperView = self.rootViewController.view.superview;
+            [self.cachedSuperView addSubview:self.drawerController.view];
+        
+            [self.rootViewController.view removeFromSuperview];
         }];
     }
 }
@@ -123,8 +142,13 @@
     
     if ([self baseViewControllerVisible]) {
 
+        [self.cachedSuperView addSubview:self.rootViewController.view];
         [UIView animateWithDuration:0.25f animations:^{
             self.rootViewController.view.frame = [self presentedViewFrame];
+        } completion:^(BOOL finished) {
+            [self.view addSubview:self.drawerController.view];
+            [self.view sendSubviewToBack:self.drawerController.view];
+
         }];
     }
 }

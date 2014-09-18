@@ -23,14 +23,13 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    ViewController *rootViewController = [ViewController new];
-    rootViewController.sectionNames = @[@"name 1", @"name 2"];
+    ViewController *drawerController = [ViewController new];
     
     SecondViewController *controller = [[SecondViewController alloc] init];
     controller.view.backgroundColor = [UIColor greenColor];
     
     VDNavigationController *navigationController = [[VDNavigationController alloc] initWithRootViewController:controller];
-    navigationController.drawerController = rootViewController;
+    navigationController.drawerController = drawerController;
     navigationController.view.backgroundColor = [UIColor blueColor];
     
     controller.view.backgroundColor = [UIColor greenColor];
