@@ -1,0 +1,10 @@
+target 'VDNavigationController', :exclusive => true do
+  pod "VDNavigationController", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "VDNavigationController", :path => "../"
+
+  pod 'Specta', '~> 0.2.1'
+  pod 'Expecta'
+end
