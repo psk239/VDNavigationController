@@ -7,12 +7,32 @@
 //
 
 #import "VDAppDelegate.h"
+#import "VDExampleDrawerController.h"
+#import "VDSecondViewController.h"
+#import <VDNavigationController/VDNavigationController.h>
 
 @implementation VDAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    VDExampleDrawerController *drawerController = [VDExampleDrawerController new];
+    
+    VDSecondViewController *controller = [[VDSecondViewController alloc] init];
+    controller.view.backgroundColor = [UIColor greenColor];
+    
+    VDNavigationController *navigationController = [[VDNavigationController alloc] initWithRootViewController:controller];
+    navigationController.drawerController = drawerController;
+    navigationController.view.backgroundColor = [UIColor blueColor];
+    
+    controller.view.backgroundColor = [UIColor greenColor];
+    controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:navigationController action:@selector(menuButtonPressed:)];
+    
+    self.window.rootViewController = navigationController;
+    [self.window makeKeyAndVisible];
+
     return YES;
 }
 							

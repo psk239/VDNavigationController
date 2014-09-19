@@ -1,13 +1,13 @@
 //
-//  VDViewController.h
+//  VDSecondViewController.h
 //  VDNavigationController
 //
-//  Created by Paul Kim on 09/18/2014.
+//  Created by Paul Kim on 9/18/14.
 //  Copyright (c) 2014 Paul Kim. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface VDViewController : UIViewController
+@interface VDSecondViewController : UIViewController
 
 @end

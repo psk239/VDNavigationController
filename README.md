@@ -20,7 +20,7 @@ it, simply add the following line to your Podfile:
 
 ## Author
 
-Paul Kim, Paul@ClassDojo.com
+Paul Kim, Paul.Kim89@Gmail.com
 
 ## License
 
