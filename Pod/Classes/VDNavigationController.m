@@ -73,9 +73,6 @@
     return dismissedFrame;
 }
 
-- (BOOL)baseViewControllerVisible {
-    return self.rootViewController.view.frame.origin.y >= [UIScreen mainScreen].bounds.size.height;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Mutators
@@ -125,12 +122,47 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Instance Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)baseViewControllerVisible {
+    return self.rootViewController.view.frame.origin.y >= [UIScreen mainScreen].bounds.size.height;
+}
+
+
+- (BOOL)drawerViewIsDetached {
+    UIView *currentSuperView = self.drawerController.view.superview;
+    while (currentSuperView.superview) {
+        if (currentSuperView == self.view) {
+            break;
+        }
+        
+        currentSuperView = currentSuperView.superview;
+    }
+    
+    if (currentSuperView != self.view) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Display Methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)showMenuAnimated:(BOOL)animated {
     
     if (![self baseViewControllerVisible]) {
+        
+        if ([self drawerViewIsDetached]) {
+            self.cachedSuperView = nil;
+            [self.drawerController.view removeFromSuperview];
+            
+            self.drawerController.view.frame = [self presentedViewFrame];
+            [self.rootViewController.view.superview addSubview:self.drawerController.view];
+            [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
+        }
         
         if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)]) {
             [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];

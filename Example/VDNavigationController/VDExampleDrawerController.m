@@ -10,6 +10,7 @@
 #import <VDNavigationController/VDNavigationController.h>
 #import "VDSecondViewController.h"
 #import "VDThirdViewController.h"
+#import "VDModalViewController.h"
 
 @interface VDExampleDrawerController () <VDNavigationControllerDelegate>
 
@@ -32,9 +33,14 @@
     [thirdVCBtn addTarget:self action:@selector(thirdVCBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
     [thirdVCBtn setTitle:@"Third VC" forState:UIControlStateNormal];
     
+    UIButton *modalVCBtn = [[UIButton alloc] initWithFrame:CGRectMake(10.0f, 180.0f, 100.0f, 100.0f)];
+    modalVCBtn.backgroundColor = [UIColor redColor];
+    [modalVCBtn addTarget:self action:@selector(modalVCBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [modalVCBtn setTitle:@"Modal VC" forState:UIControlStateNormal];
+    
     [self.view addSubview:secondVCBtn];
     [self.view addSubview:thirdVCBtn];
-    
+    [self.view addSubview:modalVCBtn];
     self.vdNavController.vdNavigationControllerDelegate = self;
 }
 
@@ -54,7 +60,11 @@
 - (void)thirdVCBtnPressed:(id)sender {
     VDThirdViewController *thirdViewController = [[VDThirdViewController alloc] init];
     [[self vdNavController] switchToViewController:thirdViewController animated:YES];
-    
+}
+
+- (void)modalVCBtnPressed:(id)sender {
+    VDModalViewController *modalVC = [[VDModalViewController alloc] init];
+    [[self vdNavController] presentViewController:modalVC animated:YES completion:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

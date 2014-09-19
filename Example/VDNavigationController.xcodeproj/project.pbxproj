@@ -22,6 +22,7 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		69076BEB19CBAD890018F22B /* VDSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69076BEA19CBAD890018F22B /* VDSecondViewController.m */; };
 		69076BEE19CBADC00018F22B /* VDThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69076BED19CBADC00018F22B /* VDThirdViewController.m */; };
+		690D820919CCA0630099B4F6 /* VDModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D820819CCA0630099B4F6 /* VDModalViewController.m */; };
 		6FC8EE868B0643068FACD508 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7ADF12F90E42D59C232449 /* libPods-Tests.a */; };
 		91DFB57A446D434CA43D2EB5 /* libPods-VDNavigationController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E0A9395ADE54C168E26ADE4 /* libPods-VDNavigationController.a */; };
 /* End PBXBuildFile section */
@@ -63,6 +64,8 @@
 		69076BEA19CBAD890018F22B /* VDSecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDSecondViewController.m; sourceTree = "<group>"; };
 		69076BEC19CBADC00018F22B /* VDThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDThirdViewController.h; sourceTree = "<group>"; };
 		69076BED19CBADC00018F22B /* VDThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDThirdViewController.m; sourceTree = "<group>"; };
+		690D820719CCA0630099B4F6 /* VDModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VDModalViewController.h; sourceTree = "<group>"; };
+		690D820819CCA0630099B4F6 /* VDModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VDModalViewController.m; sourceTree = "<group>"; };
 		7422DA426770440A808F83A7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		750660E4363C4D61B5B579B3 /* Pods-Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.xcconfig"; path = "Pods/Pods-Tests.xcconfig"; sourceTree = "<group>"; };
 		78B5AC4FB4144066BBB1A3AF /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 				69076BEA19CBAD890018F22B /* VDSecondViewController.m */,
 				69076BEC19CBADC00018F22B /* VDThirdViewController.h */,
 				69076BED19CBADC00018F22B /* VDThirdViewController.m */,
+				690D820719CCA0630099B4F6 /* VDModalViewController.h */,
+				690D820819CCA0630099B4F6 /* VDModalViewController.m */,
 				6003F5A5195388D20070C39A /* VDExampleDrawerController.h */,
 				6003F5A6195388D20070C39A /* VDExampleDrawerController.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
@@ -353,6 +358,7 @@
 			files = (
 				69076BEB19CBAD890018F22B /* VDSecondViewController.m in Sources */,
 				69076BEE19CBADC00018F22B /* VDThirdViewController.m in Sources */,
+				690D820919CCA0630099B4F6 /* VDModalViewController.m in Sources */,
 				6003F59E195388D20070C39A /* VDAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* VDExampleDrawerController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
