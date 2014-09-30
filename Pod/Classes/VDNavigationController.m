@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSString *cachedTitle;
 @property (nonatomic, strong) NSArray *cachedRightBarButtonItems;
 @property (nonatomic, strong) UIView *cachedSuperView;
-
+@property (nonatomic) BOOL isAnimating;
 @end
 
 @implementation VDNavigationController
@@ -32,7 +32,7 @@
 
 - (void)loadView {
     [super loadView];
-        
+    self.isAnimating = NO;
 }
 
 - (void)viewDidLoad {
@@ -153,55 +153,69 @@
 
 - (void)showMenuAnimated:(BOOL)animated {
     
-    if (![self baseViewControllerVisible]) {
+    if (!self.isAnimating) {
+
+        self.isAnimating = YES;
         
-        if ([self drawerViewIsDetached]) {
-            self.cachedSuperView = nil;
-            [self.drawerController.view removeFromSuperview];
+        if (![self baseViewControllerVisible]) {
             
-            self.drawerController.view.frame = [self presentedViewFrame];
-            [self.rootViewController.view.superview addSubview:self.drawerController.view];
-            [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
-        }
-        
-        if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)]) {
-            [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
-        }
-        
-        [UIView animateWithDuration:0.25 animations:^{
-            self.rootViewController.view.frame = [self dismissedViewFrame];
-        } completion:^(BOOL finished) {
-            self.cachedSuperView = self.rootViewController.view.superview;
-            [self.cachedSuperView addSubview:self.drawerController.view];
-        
-            [self.rootViewController.view removeFromSuperview];
-            
-            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)]) {
-                [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
+            if ([self drawerViewIsDetached]) {
+                self.cachedSuperView = nil;
+                [self.drawerController.view removeFromSuperview];
+                
+                self.drawerController.view.frame = [self presentedViewFrame];
+                [self.rootViewController.view.superview addSubview:self.drawerController.view];
+                [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
             }
-        }];
+            
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)]) {
+                [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
+            }
+            
+            [UIView animateWithDuration:0.25 animations:^{
+                self.rootViewController.view.frame = [self dismissedViewFrame];
+            } completion:^(BOOL finished) {
+                self.cachedSuperView = self.rootViewController.view.superview;
+                [self.cachedSuperView addSubview:self.drawerController.view];
+                
+                [self.rootViewController.view removeFromSuperview];
+                
+                self.isAnimating = NO;
+                
+                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)]) {
+                    [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
+                }
+            }];
+        }
     }
 }
 
 - (void)hideMenuAnimated:(BOOL)animated {
     
-    if ([self baseViewControllerVisible]) {
-
-        if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillDismissDrawer:)]) {
-            [self.vdNavigationControllerDelegate vdNavigationControllerWillDismissDrawer:self];
-        }
-
-        [self.cachedSuperView addSubview:self.rootViewController.view];
-        [UIView animateWithDuration:0.25f animations:^{
-            self.rootViewController.view.frame = [self presentedViewFrame];
-        } completion:^(BOOL finished) {
-            [self.view addSubview:self.drawerController.view];
-            [self.view sendSubviewToBack:self.drawerController.view];
-
-            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)]) {
-                [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
+    if (!self.isAnimating) {
+        
+        self.isAnimating = YES;
+        
+        if ([self baseViewControllerVisible]) {
+            
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillDismissDrawer:)]) {
+                [self.vdNavigationControllerDelegate vdNavigationControllerWillDismissDrawer:self];
             }
-        }];
+            
+            [self.cachedSuperView addSubview:self.rootViewController.view];
+            [UIView animateWithDuration:0.25f animations:^{
+                self.rootViewController.view.frame = [self presentedViewFrame];
+            } completion:^(BOOL finished) {
+                [self.view addSubview:self.drawerController.view];
+                [self.view sendSubviewToBack:self.drawerController.view];
+                
+                self.isAnimating = NO;
+                
+                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)]) {
+                    [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
+                }
+            }];
+        }
     }
 }
 
