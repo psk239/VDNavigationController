@@ -25,6 +25,14 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (UINavigationController*)navigationController {
+    
+    if (self.vdNavController) {
+        return self.vdNavController;
+    }
+    
+    return [super navigationController];
+}
 /*
 #pragma mark - Navigation
 

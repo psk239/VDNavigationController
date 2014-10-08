@@ -29,11 +29,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(buttonPressed:)];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)buttonPressed:(id)sender {
     UIViewController *viewController = [[UIViewController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];

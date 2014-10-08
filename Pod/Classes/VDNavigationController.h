@@ -11,10 +11,16 @@
 @class VDDrawerViewController;
 @protocol  VDNavigationControllerDelegate;
 
+typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
+    VDNavigationControllerPresentationStateNone,
+    VDNavigationControllerPresentationStateOpen,
+    VDNavigationControllerPresentationStateClosed
+};
+
 @interface VDNavigationController : UINavigationController
 @property (nonatomic, weak) id<VDNavigationControllerDelegate> vdNavigationControllerDelegate;
-@property (nonatomic, strong) NSIndexPath *selectedIndex;
 @property (nonatomic, strong) VDDrawerViewController *drawerController;
+@property (nonatomic) VDNavigationControllerPresentationState presentationState;
 
 - (void)switchToViewController:(UIViewController*)viewController animated:(BOOL)animated;
 

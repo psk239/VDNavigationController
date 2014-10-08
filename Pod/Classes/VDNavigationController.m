@@ -9,12 +9,6 @@
 #import "VDNavigationController.h"
 #import "VDDrawerViewController.h"
 
-typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
-    VDNavigationControllerPresentationStateNone,
-    VDNavigationControllerPresentationStateOpen,
-    VDNavigationControllerPresentationStateClosed
-};
-
 @interface VDNavigationController () <UINavigationControllerDelegate>
 @property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
@@ -26,10 +20,12 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 
 @implementation VDNavigationController
 
-- (instancetype)initWithRootViewController:(UIViewController *)rootViewController {
-    if (self = [super initWithRootViewController:rootViewController]) {
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController
+{
+    if (self = [super initWithRootViewController:rootViewController])
+    {
         _rootViewController = rootViewController;
-
+        
         self.pendingPresentationState = VDNavigationControllerPresentationStateNone;
     }
     return self;
@@ -39,7 +35,8 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 #pragma mark - View Lifecycle Methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)loadView {
+- (void)loadView
+{
     [super loadView];
     self.isAnimating = NO;
     
@@ -55,7 +52,8 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
     
 }
 
-- (void)viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
     
     if (self.pendingPresentationState == VDNavigationControllerPresentationStateOpen) {
@@ -65,27 +63,29 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
         [self hideMenuAnimated:NO];
         self.pendingPresentationState = VDNavigationControllerPresentationStateNone;
     }
-    
-
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Accessors
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (CGRect)presentedViewFrame {
+- (CGRect)presentedViewFrame
+{
     CGRect presentedView = self.view.bounds;
     
-    if (!self.navigationBarHidden) {
+    if (!self.navigationBarHidden)
+    {
         CGFloat navHeight = self.navigationBar.frame.size.height;
         presentedView.origin.y += navHeight;
         presentedView.size.height -= navHeight;
         
-        if (![UIApplication sharedApplication].statusBarHidden) {
+        if (![UIApplication sharedApplication].statusBarHidden)
+        {
             CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
             presentedView.origin.y += statusBarHeight;
             presentedView.size.height -= statusBarHeight;
@@ -95,7 +95,8 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
     return presentedView;
 }
 
-- (CGRect)dismissedViewFrame {
+- (CGRect)dismissedViewFrame
+{
     CGRect dismissedFrame = self.view.bounds;
     dismissedFrame.origin.y += dismissedFrame.size.height;
     return dismissedFrame;
@@ -106,12 +107,8 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 #pragma mark - Mutators
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)setSelectedIndex:(NSIndexPath *)selectedIndex {
-    _selectedIndex = selectedIndex;
-    [self showMenuAnimated:YES];
-}
-
-- (void)setDrawerController:(VDDrawerViewController *)drawerController {
+- (void)setDrawerController:(VDDrawerViewController *)drawerController
+{
     _drawerController = drawerController;
     _drawerController.vdNavController = self;
     
@@ -125,8 +122,10 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 #pragma mark - Actions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)switchToViewController:(UIViewController*)viewController animated:(BOOL)animated {
-    if (viewController) {
+- (void)switchToViewController:(UIViewController*)viewController animated:(BOOL)animated
+{
+    if (viewController)
+    {
         [self.rootViewController.view removeFromSuperview];
         self.viewControllers = @[viewController];
         self.rootViewController = viewController;
@@ -135,16 +134,19 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
         [self.view sendSubviewToBack:self.drawerController.view];
         
         self.rootViewController.view.frame = [self dismissedViewFrame];
-
+        
         [self hideMenuAnimated:animated];
     }
 }
 
-- (IBAction)menuButtonPressed:(id)sender {
-
-    if ([self baseViewControllerVisible]) {
+- (IBAction)menuButtonPressed:(id)sender
+{
+    if ([self baseViewControllerVisible])
+    {
         [self hideMenuAnimated:YES];
-    } else {
+    }
+    else
+    {
         [self showMenuAnimated:YES];
     }
 }
@@ -153,86 +155,116 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 #pragma mark - Instance Methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)baseViewControllerVisible {
+- (BOOL)baseViewControllerVisible
+{
     return self.rootViewController.view.frame.origin.y >= [UIScreen mainScreen].bounds.size.height;
 }
 
-- (BOOL)rootViewControllerViewHasLoaded {
+- (BOOL)rootViewControllerViewHasLoaded
+{
     return self.rootViewController.view.superview || self.cachedSuperView;
 }
 
-- (BOOL)drawerViewIsDetached {
+- (BOOL)drawerViewIsDetached
+{
     UIView *currentSuperView = self.drawerController.view.superview;
-    while (currentSuperView.superview) {
-        if (currentSuperView == self.view) {
+    while (currentSuperView.superview)
+    {
+        if (currentSuperView == self.view)
+        {
             break;
         }
         
         currentSuperView = currentSuperView.superview;
     }
     
-    if (currentSuperView != self.view) {
+    if (currentSuperView != self.view)
+    {
         return YES;
     }
     
     return NO;
 }
 
+- (void)cacheRootViewAndHide
+{
+    self.cachedSuperView = self.rootViewController.view.superview;
+    [self.cachedSuperView addSubview:self.drawerController.view];
+    [self.rootViewController.view removeFromSuperview];
+}
+
+- (void)moveMenuViewToBack
+{
+    self.drawerController.view.frame = [self presentedViewFrame];
+    [self.rootViewController.view.superview addSubview:self.drawerController.view];
+    [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
+}
+
+- (void)addDrawerViewAndMoveToBack {
+    [self.view addSubview:self.drawerController.view];
+    [self.view sendSubviewToBack:self.drawerController.view];
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Display Methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)showMenuAnimated:(BOOL)animated {
-    
-    if (!self.isAnimating) {
-        
-        if (![self baseViewControllerVisible]) {
-
-            if (![self rootViewControllerViewHasLoaded]) {
+- (void)showMenuAnimated:(BOOL)animated
+{
+    if (!self.isAnimating)
+    {
+        if (![self baseViewControllerVisible])
+        {
+            if (![self rootViewControllerViewHasLoaded])
+            {
                 self.pendingPresentationState = VDNavigationControllerPresentationStateOpen;
                 return;
             }
             
             self.isAnimating = YES;
-
-            if ([self drawerViewIsDetached]) {
+            
+            if ([self drawerViewIsDetached])
+            {
                 self.cachedSuperView = nil;
                 [self.drawerController.view removeFromSuperview];
                 
-                self.drawerController.view.frame = [self presentedViewFrame];
-                [self.rootViewController.view.superview addSubview:self.drawerController.view];
-                [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
+                [self moveMenuViewToBack];
             }
             
-            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)]) {
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)])
+            {
                 [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
             }
             
-            if (animated) {
-                [UIView animateWithDuration:0.25 animations:^{
-                    self.rootViewController.view.frame = [self dismissedViewFrame];
-                } completion:^(BOOL finished) {
-                    self.cachedSuperView = self.rootViewController.view.superview;
-                    [self.cachedSuperView addSubview:self.drawerController.view];
-                    
-                    [self.rootViewController.view removeFromSuperview];
-                    
-                    self.isAnimating = NO;
-                    
-                    if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)]) {
-                        [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
-                    }
-                }];
-            } else {
+            if (animated)
+            {
+                [UIView animateWithDuration:0.25 animations:^
+                 {
+                     self.rootViewController.view.frame = [self dismissedViewFrame];
+                 }
+                 completion:^(BOOL finished)
+                 {
+                     [self cacheRootViewAndHide];
+                     
+                     self.isAnimating = NO;
+                     self.presentationState = VDNavigationControllerPresentationStateOpen;
+                     
+                     if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)])
+                     {
+                         [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
+                     }
+                 }];
+            }
+            else
+            {
                 self.rootViewController.view.frame = [self dismissedViewFrame];
-                self.cachedSuperView = self.rootViewController.view.superview;
-                [self.cachedSuperView addSubview:self.drawerController.view];
-                
-                [self.rootViewController.view removeFromSuperview];
-                
+                [self cacheRootViewAndHide];
+                self.presentationState = VDNavigationControllerPresentationStateOpen;
+
                 self.isAnimating = NO;
                 
-                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)]) {
+                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)])
+                {
                     [self.vdNavigationControllerDelegate vdNavigationControllerDidPresentDrawer:self];
                 }
             }
@@ -240,51 +272,118 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
     }
 }
 
-- (void)hideMenuAnimated:(BOOL)animated {
-    
-    if (!self.isAnimating) {
-        
-        if ([self baseViewControllerVisible]) {
-
-            if (![self rootViewControllerViewHasLoaded]) {
+- (void)hideMenuAnimated:(BOOL)animated
+{
+    if (!self.isAnimating)
+    {
+        if ([self baseViewControllerVisible])
+        {
+            if (![self rootViewControllerViewHasLoaded])
+            {
                 self.pendingPresentationState = VDNavigationControllerPresentationStateClosed;
                 return;
             }
             
             self.isAnimating = YES;
             
-            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillDismissDrawer:)]) {
+            if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillDismissDrawer:)])
+            {
                 [self.vdNavigationControllerDelegate vdNavigationControllerWillDismissDrawer:self];
             }
             
             [self.cachedSuperView addSubview:self.rootViewController.view];
             
-            if (animated) {
-                [UIView animateWithDuration:0.25f animations:^{
+            if (animated)
+            {
+                [UIView animateWithDuration:0.25f animations:^
+                {
                     self.rootViewController.view.frame = [self presentedViewFrame];
-                } completion:^(BOOL finished) {
-                    [self.view addSubview:self.drawerController.view];
-                    [self.view sendSubviewToBack:self.drawerController.view];
-                    
+                }
+                completion:^(BOOL finished)
+                {
+                    [self addDrawerViewAndMoveToBack];
                     self.isAnimating = NO;
+                    self.presentationState = VDNavigationControllerPresentationStateClosed;
                     
-                    if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)]) {
+                    if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)])
+                    {
                         [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
                     }
                 }];
-            } else {
+            }
+            else
+            {
                 self.rootViewController.view.frame = [self presentedViewFrame];
-                [self.view addSubview:self.drawerController.view];
-                [self.view sendSubviewToBack:self.drawerController.view];
+                [self addDrawerViewAndMoveToBack];
+                self.presentationState = VDNavigationControllerPresentationStateClosed;
                 
                 self.isAnimating = NO;
                 
-                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)]) {
+                if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)])
+                {
                     [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
                 }
             }
         }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UINavigationController Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if (self.presentationState == VDNavigationControllerPresentationStateOpen) {
+        
+        if (self.cachedSuperView) {
+            [self.cachedSuperView addSubview:self.rootViewController.view];
+        }
+        self.rootViewController.view.userInteractionEnabled = NO;
+        self.rootViewController.view.hidden = YES;
+        [self addDrawerViewAndMoveToBack];
+    }
+    
+    [super pushViewController:viewController animated:animated];
+    
+        NSLog(@"view stack = %@", [self.view.subviews[0] subviews]);
+}
+
+- (UIViewController*)popViewControllerAnimated:(BOOL)animated
+{
+    UIViewController *poppedViewController = [super popViewControllerAnimated:animated];
+    
+    if (self.viewControllers.count <= 2 && self.presentationState == VDNavigationControllerPresentationStateOpen)
+    {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC) ), dispatch_get_main_queue(), ^
+        {
+            [self moveMenuViewToBack];
+            [self cacheRootViewAndHide];
+            self.rootViewController.view.userInteractionEnabled = YES;
+            self.rootViewController.view.hidden = NO;
+            self.rootViewController.view.frame = [self dismissedViewFrame];
+        });
+    }
+    
+    return poppedViewController;
+}
+
+- (NSArray*)popToRootViewControllerAnimated:(BOOL)animated
+{
+    NSArray *poppedControllers = [super popToRootViewControllerAnimated:animated];
+    
+    if (self.presentationState == VDNavigationControllerPresentationStateOpen)
+    {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC) ), dispatch_get_main_queue(), ^
+        {
+            [self moveMenuViewToBack];
+            [self cacheRootViewAndHide];
+            self.rootViewController.view.userInteractionEnabled = YES;
+            self.rootViewController.view.hidden = NO;
+            self.rootViewController.view.frame = [self dismissedViewFrame];
+        });
+    }
+    return poppedControllers;
 }
 
 @end
