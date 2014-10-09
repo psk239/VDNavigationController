@@ -12,8 +12,10 @@
 @interface VDNavigationController () <UINavigationControllerDelegate>
 @property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
+@property (nonatomic, strong) NSArray *cachedLeftBarButtonItems;
 @property (nonatomic, strong) NSArray *cachedRightBarButtonItems;
 @property (nonatomic, strong) UIView *cachedSuperView;
+
 @property (nonatomic) BOOL isAnimating;
 @property (nonatomic) VDNavigationControllerPresentationState pendingPresentationState;
 @end
@@ -134,6 +136,8 @@
         [self.view sendSubviewToBack:self.drawerController.view];
         
         self.rootViewController.view.frame = [self dismissedViewFrame];
+        self.cachedRightBarButtonItems = nil;
+        self.cachedLeftBarButtonItems = nil;
         
         [self hideMenuAnimated:animated];
     }
@@ -149,6 +153,29 @@
     {
         [self showMenuAnimated:YES];
     }
+}
+
+- (void)swapBarButtonItemsForViewController:(UIViewController*)viewController animated:(BOOL)animated
+{
+    NSArray *leftBarButtonItems = viewController.navigationItem.leftBarButtonItems;
+    NSArray *rightBarButtonItems = viewController.navigationItem.rightBarButtonItems;
+
+    if ([[viewController class] isSubclassOfClass:[VDDrawerViewController class]])
+    {
+        leftBarButtonItems = [(VDDrawerViewController*)viewController leftBarButtonItems];
+        rightBarButtonItems = [(VDDrawerViewController*)viewController rightBarButtonItems];
+        
+        self.cachedLeftBarButtonItems = self.rootViewController.navigationItem.leftBarButtonItems;
+        self.cachedRightBarButtonItems = self.rootViewController.navigationItem.rightBarButtonItems;
+    }
+    else if (self.cachedLeftBarButtonItems || self.cachedRightBarButtonItems)
+    {
+        leftBarButtonItems = self.cachedLeftBarButtonItems;
+        rightBarButtonItems = self.cachedRightBarButtonItems;
+    }
+    
+    [self.rootViewController.navigationItem setLeftBarButtonItems:leftBarButtonItems animated:animated];
+    [self.rootViewController.navigationItem setRightBarButtonItems:rightBarButtonItems animated:animated];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,8 +271,9 @@
                  }
                  completion:^(BOOL finished)
                  {
+                     [self swapBarButtonItemsForViewController:self.drawerController animated:YES];
                      [self cacheRootViewAndHide];
-                     
+
                      self.isAnimating = NO;
                      self.presentationState = VDNavigationControllerPresentationStateOpen;
                      
@@ -258,7 +286,11 @@
             else
             {
                 self.rootViewController.view.frame = [self dismissedViewFrame];
+                [self swapBarButtonItemsForViewController:self.drawerController animated:NO];
                 [self cacheRootViewAndHide];
+                
+                [self addChildViewController:self.drawerController];
+                
                 self.presentationState = VDNavigationControllerPresentationStateOpen;
 
                 self.isAnimating = NO;
@@ -302,6 +334,8 @@
                 completion:^(BOOL finished)
                 {
                     [self addDrawerViewAndMoveToBack];
+                    [self swapBarButtonItemsForViewController:self.rootViewController animated:YES];
+
                     self.isAnimating = NO;
                     self.presentationState = VDNavigationControllerPresentationStateClosed;
                     
@@ -315,6 +349,7 @@
             {
                 self.rootViewController.view.frame = [self presentedViewFrame];
                 [self addDrawerViewAndMoveToBack];
+                [self swapBarButtonItemsForViewController:self.rootViewController animated:NO];
                 self.presentationState = VDNavigationControllerPresentationStateClosed;
                 
                 self.isAnimating = NO;
@@ -345,8 +380,6 @@
     }
     
     [super pushViewController:viewController animated:animated];
-    
-        NSLog(@"view stack = %@", [self.view.subviews[0] subviews]);
 }
 
 - (UIViewController*)popViewControllerAnimated:(BOOL)animated

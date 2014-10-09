@@ -13,4 +13,7 @@
 @interface VDDrawerViewController : UIViewController
 @property (nonatomic, weak) VDNavigationController *vdNavController;
 
+- (NSArray*)leftBarButtonItems;
+- (NSArray*)rightBarButtonItems;
+
 @end

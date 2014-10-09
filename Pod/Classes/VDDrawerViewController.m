@@ -33,6 +33,20 @@
     
     return [super navigationController];
 }
+
+- (NSArray*)leftBarButtonItems {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return nil;
+}
+
+- (NSArray*)rightBarButtonItems {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return nil;
+}
 /*
 #pragma mark - Navigation
 

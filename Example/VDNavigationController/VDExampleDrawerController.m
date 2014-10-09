@@ -44,14 +44,6 @@
     self.vdNavController.vdNavigationControllerDelegate = self;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    if (!self.navigationItem.leftBarButtonItem) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)];
-    }
-}
-
 - (void)secondVCBtnPressed:(id)sender {
     VDSecondViewController *secondViewController = [[VDSecondViewController alloc] init];
     [[self vdNavController] switchToViewController:secondViewController animated:YES];
@@ -65,6 +57,14 @@
 - (void)modalVCBtnPressed:(id)sender {
     VDModalViewController *modalVC = [[VDModalViewController alloc] init];
     [[self vdNavController] presentViewController:modalVC animated:YES completion:nil];
+}
+
+- (NSArray*)leftBarButtonItems {
+    return @[[[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)]];
+}
+
+- (NSArray*)rightBarButtonItems {
+    return nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
