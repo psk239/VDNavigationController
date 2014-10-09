@@ -185,16 +185,6 @@
     
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-}
-
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -288,6 +278,7 @@
         self.rootViewController.view.frame = [self dismissedViewFrame];
         self.cachedRightBarButtonItems = nil;
         self.cachedLeftBarButtonItems = nil;
+        self.cachedTitle = nil;
         
         [self hideMenuAnimated:animated];
     }
@@ -330,6 +321,18 @@
     
     [self.rootViewController.navigationItem setLeftBarButtonItems:leftBarButtonItems animated:animated];
     [self.rootViewController.navigationItem setRightBarButtonItems:rightBarButtonItems animated:animated];
+}
+
+- (void)swapTitleForViewController:(UIViewController*)viewController animated:(BOOL)animated
+{
+    if (viewController == self.drawerController) {
+        self.cachedTitle = self.rootViewController.title;
+        self.rootViewController.title = viewController.title;
+    } else if (self.cachedTitle) {
+        self.rootViewController.title = self.cachedTitle;
+    }
+    
+    NSLog(@"Cached title = %@", self.cachedTitle);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,8 +421,6 @@
                 [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
             }
             
-            
-            
             if (animated)
             {
                 [UIView animateWithDuration:0.25 animations:^
@@ -429,6 +430,7 @@
                  completion:^(BOOL finished)
                  {
                      [self swapBarButtonItemsForViewController:self.drawerController animated:YES];
+                     [self swapTitleForViewController:self.drawerController animated:YES];
                      [self cacheRootViewAndHide];
 
                      [self setBarButtonItemsEnabled:YES];
@@ -445,6 +447,7 @@
             {
                 self.rootViewController.view.frame = [self dismissedViewFrame];
                 [self swapBarButtonItemsForViewController:self.drawerController animated:NO];
+                [self swapTitleForViewController:self.drawerController animated:NO];
                 [self cacheRootViewAndHide];
                 
                 [self addChildViewController:self.drawerController];
@@ -494,6 +497,7 @@
                 {
                     [self addDrawerViewAndMoveToBack];
                     [self swapBarButtonItemsForViewController:self.rootViewController animated:YES];
+                    [self swapTitleForViewController:self.rootViewController animated:YES];
 
                     self.isAnimating = NO;
                     self.presentationState = VDNavigationControllerPresentationStateClosed;
@@ -509,6 +513,8 @@
                 self.rootViewController.view.frame = [self presentedViewFrame];
                 [self addDrawerViewAndMoveToBack];
                 [self swapBarButtonItemsForViewController:self.rootViewController animated:NO];
+                [self swapTitleForViewController:self.rootViewController animated:NO];
+                
                 self.presentationState = VDNavigationControllerPresentationStateClosed;
                 
                 self.isAnimating = NO;
@@ -520,6 +526,25 @@
             }
         }
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Modal Presentation Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+    [super presentViewController:viewControllerToPresent animated:flag completion:^
+    {
+        if (self.cachedTitle)
+        {
+            self.rootViewController.title = self.cachedTitle;
+        }
+        
+        if (completion) {
+            completion();
+        }
+    }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
