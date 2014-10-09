@@ -9,7 +9,144 @@
 #import "VDNavigationController.h"
 #import "VDDrawerViewController.h"
 
+
+@interface VDMultiplexer : NSObject
+
+/**
+ *  A collection of behavior objects to forward messages to.
+ */
+@property (nonatomic, strong) NSMutableArray *mutableTargets;
+
+/**
+ *  Adds the target. If the target is already included in the list of targets, does nothing.
+ *
+ *  @param target The new target to add.
+ */
+- (void)addTarget:(id)target;
+
+
+/**
+ *  Renoves the target. If the target is not included in the list of targets, does nothing.
+ *
+ *  @param target The target to remove
+ */
+- (void)removeTarget:(id)target;
+
+@end
+
+
+@interface VDMultiplexer () //private
+@end
+
+@implementation VDMultiplexer
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Lifecycle Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (instancetype) init {
+    if (self = [super init]) {
+        self.mutableTargets = [NSMutableArray new];
+    }
+    
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Mutators
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)addTarget:(id)target {
+    if (![self targetAlreadyExists:target]) {
+        [self.mutableTargets addObject:[self convertedTarget:target]];
+    }
+}
+
+- (void)removeTarget:(id)target {
+    NSValue *value = [self convertedTarget:target];
+    NSValue *valueToDelete = nil;
+    for (NSValue* currentValue in self.mutableTargets) {
+        if ([currentValue isEqualToValue:value]) {
+            valueToDelete = currentValue;
+            break;
+        }
+    }
+    
+    if (valueToDelete) {
+        [self.mutableTargets removeObject:valueToDelete];
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Convenience Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSValue*)convertedTarget:(id)target {
+    NSValue *value = [NSValue valueWithNonretainedObject:target];
+    return value;
+}
+
+- (BOOL)targetAlreadyExists:(id)target {
+    NSValue *value = [self convertedTarget:target];
+    for (NSValue* currentValue in self.mutableTargets) {
+        if ([currentValue isEqualToValue:value]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - Overwrite Apple Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
+    
+    NSMethodSignature *sig = [super methodSignatureForSelector:sel];
+    if (!sig) {
+        for (NSValue* obj in self.mutableTargets) {
+            if ((sig = [[obj nonretainedObjectValue] methodSignatureForSelector:sel])) {
+                break;
+            }
+        }
+    }
+    return sig;
+}
+
+- (BOOL)respondsToSelector:(SEL)aSelector {
+    
+    BOOL base = [super respondsToSelector:aSelector];
+    if (base) {
+        return base;
+    }
+    
+    for (NSValue* obj in self.mutableTargets) {
+        if ([[obj nonretainedObjectValue] respondsToSelector:aSelector]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    
+    for (NSValue* obj in self.mutableTargets) {
+        if ([[obj nonretainedObjectValue] respondsToSelector:anInvocation.selector]) {
+            [anInvocation invokeWithTarget:[obj nonretainedObjectValue]];
+        }
+    }
+}
+
+@end
+
+
+
+
+
 @interface VDNavigationController () <UINavigationControllerDelegate>
+@property (nonatomic, strong) VDMultiplexer<UINavigationControllerDelegate> *delegateMultiplexer;
 @property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
 @property (nonatomic, strong) NSArray *cachedLeftBarButtonItems;
@@ -21,12 +158,16 @@
 @end
 
 @implementation VDNavigationController
+@synthesize delegate = _delegate;
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController
 {
     if (self = [super initWithRootViewController:rootViewController])
     {
         _rootViewController = rootViewController;
+        
+        _delegate = self.delegateMultiplexer;
+        [self.delegateMultiplexer addTarget:self];
         
         self.pendingPresentationState = VDNavigationControllerPresentationStateNone;
     }
@@ -67,14 +208,20 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Accessors
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (VDMultiplexer<UINavigationControllerDelegate> *)delegateMultiplexer
+{
+    if (!_delegateMultiplexer)
+    {
+        _delegateMultiplexer = (VDMultiplexer<UINavigationControllerDelegate> *)[[VDMultiplexer alloc] init];
+    }
+    
+    return _delegateMultiplexer;
+}
+
 
 - (CGRect)presentedViewFrame
 {
@@ -119,6 +266,9 @@
     [self.view sendSubviewToBack:self.drawerController.view];
 }
 
+- (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
+    [self.delegateMultiplexer addTarget:delegate];
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Actions
@@ -153,6 +303,10 @@
     {
         [self showMenuAnimated:YES];
     }
+}
+
+- (void)setBarButtonItemsEnabled:(BOOL)enabled {
+    self.rootViewController.navigationController.navigationBar.userInteractionEnabled = enabled;
 }
 
 - (void)swapBarButtonItemsForViewController:(UIViewController*)viewController animated:(BOOL)animated
@@ -249,6 +403,7 @@
             }
             
             self.isAnimating = YES;
+            [self setBarButtonItemsEnabled:NO];
             
             if ([self drawerViewIsDetached])
             {
@@ -263,6 +418,8 @@
                 [self.vdNavigationControllerDelegate vdNavigationControllerWillPresentDrawer:self];
             }
             
+            
+            
             if (animated)
             {
                 [UIView animateWithDuration:0.25 animations:^
@@ -274,6 +431,7 @@
                      [self swapBarButtonItemsForViewController:self.drawerController animated:YES];
                      [self cacheRootViewAndHide];
 
+                     [self setBarButtonItemsEnabled:YES];
                      self.isAnimating = NO;
                      self.presentationState = VDNavigationControllerPresentationStateOpen;
                      
@@ -292,7 +450,8 @@
                 [self addChildViewController:self.drawerController];
                 
                 self.presentationState = VDNavigationControllerPresentationStateOpen;
-
+                
+                [self setBarButtonItemsEnabled:YES];
                 self.isAnimating = NO;
                 
                 if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)])
@@ -407,7 +566,7 @@
     
     if (self.presentationState == VDNavigationControllerPresentationStateOpen)
     {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC) ), dispatch_get_main_queue(), ^
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC * animated) ), dispatch_get_main_queue(), ^
         {
             [self moveMenuViewToBack];
             [self cacheRootViewAndHide];
@@ -417,6 +576,20 @@
         });
     }
     return poppedControllers;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UINavigationController Delegate Methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    self.isAnimating = YES;
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    self.isAnimating = NO;
 }
 
 @end
