@@ -331,8 +331,6 @@
     } else if (self.cachedTitle) {
         self.rootViewController.title = self.cachedTitle;
     }
-    
-    NSLog(@"Cached title = %@", self.cachedTitle);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

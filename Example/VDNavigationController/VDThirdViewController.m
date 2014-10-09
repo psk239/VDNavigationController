@@ -7,6 +7,7 @@
 //
 
 #import "VDThirdViewController.h"
+#import "VDNavigationController.h"
 
 @interface VDThirdViewController ()
 
@@ -26,7 +27,7 @@
     // Do any additional setup after loading the view.
     
     if (!self.navigationItem.leftBarButtonItem) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:self.navigationController action:@selector(menuButtonPressed:)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStylePlain target:(VDNavigationController*)self.navigationController action:@selector(menuButtonPressed:)];
     }
     
     self.navigationController.navigationBarHidden = NO;
