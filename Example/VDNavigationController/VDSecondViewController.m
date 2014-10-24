@@ -8,6 +8,7 @@
 
 #import "VDSecondViewController.h"
 #import "VDNavigationController.h"
+#import "VDSkipViewController.h"
 
 @interface VDSecondViewController ()
 
@@ -31,9 +32,8 @@
 }
 
 - (void)buttonPressed:(id)sender {
-    UIViewController *viewController = [[UIViewController alloc] init];
+    VDSkipViewController *viewController = [[VDSkipViewController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];
-    viewController.view.backgroundColor = [UIColor redColor];
 }
 
 @end

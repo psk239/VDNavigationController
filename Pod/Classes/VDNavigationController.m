@@ -181,9 +181,18 @@
 - (void)loadView
 {
     [super loadView];
+    
+    [self addObserver:self forKeyPath:@"viewControllers" options:NSKeyValueObservingOptionOld context:nil];
+    
     self.isAnimating = NO;
     
 }
+
+- (void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"viewControllers"];
+}
+
 
 - (void)viewDidLayoutSubviews
 {
@@ -258,6 +267,36 @@
 
 - (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
     [self.delegateMultiplexer addTarget:delegate];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - KVO
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+
+    /**
+     *  If a UIViewController is manually removed from the list of controllers, we have to make sure that the multiplexer 
+     *  correctly removes it from the list of UINavigationControllerDelegates.
+     */
+    if ([keyPath isEqualToString:@"viewControllers"] && change)
+    {
+        NSArray *oldControllers = change[NSKeyValueChangeOldKey];
+        NSMutableSet *filteredSet = [NSMutableSet setWithArray:oldControllers];
+        
+        for (UIViewController *controller in self.viewControllers)
+        {
+            [filteredSet removeObject:controller];
+        }
+        
+        if ([filteredSet count] > 0)
+        {
+            [filteredSet enumerateObjectsUsingBlock:^(UIViewController* controller, BOOL *stop)
+            {
+                [self.delegateMultiplexer removeTarget:controller];
+            }];
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
