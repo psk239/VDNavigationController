@@ -15,7 +15,7 @@
 /**
  *  A collection of behavior objects to forward messages to.
  */
-@property (nonatomic, strong) NSMutableArray *mutableTargets;
+@property (nonatomic, strong) NSPointerArray *targets;
 
 /**
  *  Adds the target. If the target is already included in the list of targets, does nothing.
@@ -46,7 +46,7 @@
 
 - (instancetype) init {
     if (self = [super init]) {
-        self.mutableTargets = [NSMutableArray new];
+        self.targets = [NSPointerArray weakObjectsPointerArray];
     }
     
     return self;
@@ -58,22 +58,25 @@
 
 - (void)addTarget:(id)target {
     if (![self targetAlreadyExists:target]) {
-        [self.mutableTargets addObject:[self convertedTarget:target]];
+        [self.targets addPointer:(__bridge void*)target];
     }
 }
 
 - (void)removeTarget:(id)target {
-    NSValue *value = [self convertedTarget:target];
+    
     NSValue *valueToDelete = nil;
-    for (NSValue* currentValue in self.mutableTargets) {
-        if ([currentValue isEqualToValue:value]) {
-            valueToDelete = currentValue;
+    
+    int i = 0;
+    for (id object in self.targets) {
+        if ([object isEqual:target]) {
+            valueToDelete = object;
             break;
         }
+        i++;
     }
     
     if (valueToDelete) {
-        [self.mutableTargets removeObject:valueToDelete];
+        [self.targets removePointerAtIndex:i];
     }
 }
 
@@ -81,19 +84,23 @@
 #pragma mark - Convenience Methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSValue*)convertedTarget:(id)target {
-    NSValue *value = [NSValue valueWithNonretainedObject:target];
-    return value;
+- (BOOL)targetAlreadyExists:(id)target {
+    return [self.targets.allObjects containsObject:target];
 }
 
-- (BOOL)targetAlreadyExists:(id)target {
-    NSValue *value = [self convertedTarget:target];
-    for (NSValue* currentValue in self.mutableTargets) {
-        if ([currentValue isEqualToValue:value]) {
-            return YES;
+- (void)cleanMutableTargets {
+    int idx = 0;
+    while (self.targets.count > 0 && idx < self.targets.count)
+    {
+        if ([self.targets pointerAtIndex:idx] == NULL)
+        {
+            [self.targets removePointerAtIndex:idx];
+            idx = 0;
+            continue;
         }
+        
+        idx++;
     }
-    return NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +111,8 @@
     
     NSMethodSignature *sig = [super methodSignatureForSelector:sel];
     if (!sig) {
-        for (NSValue* obj in self.mutableTargets) {
-            if ((sig = [[obj nonretainedObjectValue] methodSignatureForSelector:sel])) {
+        for (id object in self.targets.allObjects) {
+            if ((sig = [object methodSignatureForSelector:sel])) {
                 break;
             }
         }
@@ -120,8 +127,8 @@
         return base;
     }
     
-    for (NSValue* obj in self.mutableTargets) {
-        if ([[obj nonretainedObjectValue] respondsToSelector:aSelector]) {
+    for (id object in self.targets) {
+        if ([object respondsToSelector:aSelector]) {
             return YES;
         }
     }
@@ -132,9 +139,10 @@
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     
-    for (NSValue* obj in self.mutableTargets) {
-        if ([[obj nonretainedObjectValue] respondsToSelector:anInvocation.selector]) {
-            [anInvocation invokeWithTarget:[obj nonretainedObjectValue]];
+    [self cleanMutableTargets];
+    for (id object in self.targets.allObjects) {
+        if ([object respondsToSelector:anInvocation.selector]) {
+            [anInvocation invokeWithTarget:object];
         }
     }
 }
