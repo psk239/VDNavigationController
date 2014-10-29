@@ -394,6 +394,10 @@
                 [UIView animateWithDuration:0.25 animations:^
                  {
                      self.rootViewController.view.frame = [self dismissedViewFrame];
+                     if (self.showMenuAnimationBlock)
+                     {
+                         self.showMenuAnimationBlock();
+                     }
                  }
                  completion:^(BOOL finished)
                  {
@@ -454,6 +458,10 @@
                 [UIView animateWithDuration:0.25f animations:^
                 {
                     self.rootViewController.view.frame = [self presentedViewFrame];
+                    if (self.hideMenuAnimationBlock)
+                    {
+                        self.hideMenuAnimationBlock();
+                    }
                 }
                 completion:^(BOOL finished)
                 {

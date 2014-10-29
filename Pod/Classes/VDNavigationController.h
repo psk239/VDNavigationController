@@ -31,6 +31,12 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
     VDNavigationControllerPresentationStateClosed
 };
 
+
+/**
+ *  The standard animation block
+ */
+typedef void (^VDNavigationControllerAnimationBlock)(void);
+
 /**
  *  This class is where all the VDNavigationDrawer magic happens. This class is responsible for managing the display of the VDDrawerViewController. 
  *  The RootViewController property of this view is the UIViewController that is displayed in front of the Drawer Menu. The Drawer menu is left undefined,
@@ -50,6 +56,18 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
  *  The drawer controller displayed behind the RootViewController.
  */
 @property (nonatomic, strong) VDDrawerViewController *drawerController;
+
+/**
+ *  The custom animations to include when the menu is shown. Implement this block when you want to include your own animations.
+ *  @warning Like with all blocks, make sure you use a weak reference to the VDNavigationController when implementing this block
+ */
+@property (nonatomic, copy) VDNavigationControllerAnimationBlock showMenuAnimationBlock;
+
+/**
+ *  The custom animation to include when the menu is hidden. Implement this block when you want to include your own animations.
+ *  @warning Like with all blocks, make sure you use a weak reference to the VDNavigationController when implementing this block
+ */
+@property (nonatomic, copy) VDNavigationControllerAnimationBlock hideMenuAnimationBlock;
 
 /**
  *  The current presentation state
@@ -92,6 +110,22 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
  *  @param animated Whether or not to animate the RootViewController as it is presented upwards.
  */
 - (void)hideMenuAnimated:(BOOL)animated;
+
+/**
+ *  The setter for the showMenuAnimationBlock. This needs to be declared so autocomplete works correctly.
+ *  @warning Like with all blocks, make sure you use a weak reference to the VDNavigationController when implementing this block
+ *
+ *  @param showMenuAnimationBlock The animation block to be invoked when the menu is shown.
+ */
+- (void)setShowMenuAnimationBlock:(VDNavigationControllerAnimationBlock)showMenuAnimationBlock;
+
+/**
+ *  The setter for the hideMenuAnimationBlock. This needs to be declared so autocomplete works correctly.
+ *  @warning Like with all blocks, make sure you use a weak reference to the VDNavigationController when implementing this block
+ *
+ *  @param hideMenuAnimationBlock The animation block to be invoked when the menu is hidden.
+ */
+- (void)setHideMenuAnimationBlock:(VDNavigationControllerAnimationBlock)hideMenuAnimationBlock;
 
 @end
 
