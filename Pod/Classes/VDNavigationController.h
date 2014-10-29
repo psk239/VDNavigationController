@@ -57,6 +57,12 @@ typedef NS_ENUM(NSUInteger, VDNavigationControllerPresentationState) {
 @property (nonatomic) VDNavigationControllerPresentationState presentationState;
 
 /**
+ *  When the Drawer is initially added to the UINavigationController's view, it sometimes is misaligned vertically. If you notice the drawer
+ *  vertically jumps when it is initially presented, adjust this property as needed to get the desired layout.
+ */
+@property (nonatomic) CGFloat drawerYOffset;
+
+/**
  *  This is the method only method that should be used in order to display a new UIViewController as the RootViewController. 
  *  For example, if UIViewController A is currently being displayed, and you want UIViewController B to be displayed instead,
  *  calls this method while passing UIViewController B as an argument.

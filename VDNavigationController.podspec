@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
 
                         #Summary
 
-                        This is a vertically presenting menu controller that displays top-level view controllers to the user. You can use whatever style you wish to layout your menu (i.e. Subclass of VDDrawerViewController).
+                        This is a vertically presenting menu controller that displays top-level view controllers to the user. You can use whatever style you wish to layout your menu (i.e. Subclass VDDrawerViewController).
 
                         #License
 

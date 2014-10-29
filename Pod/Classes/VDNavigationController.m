@@ -247,9 +247,9 @@
     _drawerController.vdNavController = self;
     
     self.drawerController.view.frame = [self presentedViewFrame];
-    
+    CGRect frame = self.drawerController.view.frame;
+
     if (self.drawerController.edgesForExtendedLayout == UIRectEdgeNone) {
-        CGRect frame = self.drawerController.view.frame;
         
         if (!self.navigationBarHidden) {
             CGFloat navigationBarHeight = self.navigationBar.frame.size.height;
@@ -262,10 +262,13 @@
             frame.origin.y += statusBarHeight;
             frame.size.height -= statusBarHeight;
         }
-        
-        self.drawerController.view.frame = frame;
     }
     
+    frame.origin.y += self.drawerYOffset;
+    frame.size.height -= self.drawerYOffset;
+    
+    self.drawerController.view.frame = frame;
+
     
     [self.view addSubview:self.drawerController.view];
     [self.view sendSubviewToBack:self.drawerController.view];
