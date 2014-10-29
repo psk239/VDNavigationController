@@ -27,7 +27,7 @@
  *
  *  @return An array of UIBarButtonItems or nil
  */
-- (NSArray*)leftBarButtonItems;
+- (NSArray*)leftBarButtonItems DEPRECATED_ATTRIBUTE;
 
 /**
  *  The rightBarButtonItems that the VDDrawerViewController presents when the menu is presented
@@ -35,6 +35,6 @@
  *
  *  @return An array of UIBarButtonItems or nil
  */
-- (NSArray*)rightBarButtonItems;
+- (NSArray*)rightBarButtonItems DEPRECATED_ATTRIBUTE;
 
 @end

@@ -157,9 +157,6 @@
 @property (nonatomic, strong) VDMultiplexer<UINavigationControllerDelegate> *delegateMultiplexer;
 @property (nonatomic, strong) UIViewController *rootViewController;
 @property (nonatomic, strong) NSString *cachedTitle;
-@property (nonatomic, strong) NSArray *cachedLeftBarButtonItems;
-@property (nonatomic, strong) NSArray *cachedRightBarButtonItems;
-@property (nonatomic, strong) UIView *cachedSuperView;
 
 @property (nonatomic) BOOL isAnimating;
 @property (nonatomic) VDNavigationControllerPresentationState pendingPresentationState;
@@ -168,11 +165,11 @@
 @implementation VDNavigationController
 @synthesize delegate = _delegate;
 
-- (instancetype)initWithRootViewController:(UIViewController *)rootViewController
+- (instancetype)initWithRootViewController:(UIViewController *)thisRootController
 {
-    if (self = [super initWithRootViewController:rootViewController])
+    if (self = [super initWithRootViewController:thisRootController])
     {
-        _rootViewController = rootViewController;
+        self.rootViewController = thisRootController;
         
         _delegate = self.delegateMultiplexer;
         [self.delegateMultiplexer addTarget:self];
@@ -190,15 +187,12 @@
 {
     [super loadView];
     
-    [self addObserver:self forKeyPath:@"viewControllers" options:NSKeyValueObservingOptionOld context:nil];
-    
     self.isAnimating = NO;
-    
 }
 
 - (void)dealloc
 {
-    [self removeObserver:self forKeyPath:@"viewControllers"];
+
 }
 
 
@@ -232,23 +226,7 @@
 
 - (CGRect)presentedViewFrame
 {
-    CGRect presentedView = self.view.bounds;
-    
-    if (!self.navigationBarHidden)
-    {
-        CGFloat navHeight = self.navigationBar.frame.size.height;
-        presentedView.origin.y += navHeight;
-        presentedView.size.height -= navHeight;
-        
-        if (![UIApplication sharedApplication].statusBarHidden)
-        {
-            CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-            presentedView.origin.y += statusBarHeight;
-            presentedView.size.height -= statusBarHeight;
-        }
-        
-    }
-    return presentedView;
+    return self.view.bounds;
 }
 
 - (CGRect)dismissedViewFrame
@@ -269,42 +247,32 @@
     _drawerController.vdNavController = self;
     
     self.drawerController.view.frame = [self presentedViewFrame];
+    
+    if (self.drawerController.edgesForExtendedLayout == UIRectEdgeNone) {
+        CGRect frame = self.drawerController.view.frame;
+        
+        if (!self.navigationBarHidden) {
+            CGFloat navigationBarHeight = self.navigationBar.frame.size.height;
+            frame.origin.y += navigationBarHeight;
+            frame.size.height -= navigationBarHeight;
+        }
+        
+        if (![UIApplication sharedApplication].statusBarHidden) {
+            CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+            frame.origin.y += statusBarHeight;
+            frame.size.height -= statusBarHeight;
+        }
+        
+        self.drawerController.view.frame = frame;
+    }
+    
+    
     [self.view addSubview:self.drawerController.view];
     [self.view sendSubviewToBack:self.drawerController.view];
 }
 
 - (void)setDelegate:(id<UINavigationControllerDelegate>)delegate {
     [self.delegateMultiplexer addTarget:delegate];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - KVO
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-
-    /**
-     *  If a UIViewController is manually removed from the list of controllers, we have to make sure that the multiplexer 
-     *  correctly removes it from the list of UINavigationControllerDelegates.
-     */
-    if ([keyPath isEqualToString:@"viewControllers"] && change)
-    {
-        NSArray *oldControllers = change[NSKeyValueChangeOldKey];
-        NSMutableSet *filteredSet = [NSMutableSet setWithArray:oldControllers];
-        
-        for (UIViewController *controller in self.viewControllers)
-        {
-            [filteredSet removeObject:controller];
-        }
-        
-        if ([filteredSet count] > 0)
-        {
-            [filteredSet enumerateObjectsUsingBlock:^(UIViewController* controller, BOOL *stop)
-            {
-                [self.delegateMultiplexer removeTarget:controller];
-            }];
-        }
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,15 +284,10 @@
     if (viewController)
     {
         [self.rootViewController.view removeFromSuperview];
-        self.viewControllers = @[viewController];
+
         self.rootViewController = viewController;
         
-        [self.view addSubview:self.drawerController.view];
-        [self.view sendSubviewToBack:self.drawerController.view];
-        
         self.rootViewController.view.frame = [self dismissedViewFrame];
-        self.cachedRightBarButtonItems = nil;
-        self.cachedLeftBarButtonItems = nil;
         self.cachedTitle = nil;
         
         [self hideMenuAnimated:animated];
@@ -343,33 +306,6 @@
     }
 }
 
-- (void)setBarButtonItemsEnabled:(BOOL)enabled {
-    self.rootViewController.navigationController.navigationBar.userInteractionEnabled = enabled;
-}
-
-- (void)swapBarButtonItemsForViewController:(UIViewController*)viewController animated:(BOOL)animated
-{
-    NSArray *leftBarButtonItems = viewController.navigationItem.leftBarButtonItems;
-    NSArray *rightBarButtonItems = viewController.navigationItem.rightBarButtonItems;
-
-    if ([[viewController class] isSubclassOfClass:[VDDrawerViewController class]])
-    {
-        leftBarButtonItems = [(VDDrawerViewController*)viewController leftBarButtonItems];
-        rightBarButtonItems = [(VDDrawerViewController*)viewController rightBarButtonItems];
-        
-        self.cachedLeftBarButtonItems = self.rootViewController.navigationItem.leftBarButtonItems;
-        self.cachedRightBarButtonItems = self.rootViewController.navigationItem.rightBarButtonItems;
-    }
-    else if (self.cachedLeftBarButtonItems || self.cachedRightBarButtonItems)
-    {
-        leftBarButtonItems = self.cachedLeftBarButtonItems;
-        rightBarButtonItems = self.cachedRightBarButtonItems;
-    }
-    
-    [self.rootViewController.navigationItem setLeftBarButtonItems:leftBarButtonItems animated:animated];
-    [self.rootViewController.navigationItem setRightBarButtonItems:rightBarButtonItems animated:animated];
-}
-
 - (void)swapTitleForViewController:(UIViewController*)viewController animated:(BOOL)animated
 {
     if (viewController == self.drawerController) {
@@ -386,12 +322,12 @@
 
 - (BOOL)baseViewControllerVisible
 {
-    return self.rootViewController.view.frame.origin.y >= [UIScreen mainScreen].bounds.size.height;
+    return [self.viewControllers count] == 1 && self.viewControllers[0] == self.drawerController;
 }
 
 - (BOOL)rootViewControllerViewHasLoaded
 {
-    return self.rootViewController.view.superview || self.cachedSuperView;
+    return self.rootViewController.view.superview || self.viewControllers[0] == self.drawerController;
 }
 
 - (BOOL)drawerViewIsDetached
@@ -415,16 +351,9 @@
     return NO;
 }
 
-- (void)cacheRootViewAndHide
-{
-    self.cachedSuperView = self.rootViewController.view.superview;
-    [self.cachedSuperView addSubview:self.drawerController.view];
-    [self.rootViewController.view removeFromSuperview];
-}
-
 - (void)moveMenuViewToBack
 {
-    self.drawerController.view.frame = [self presentedViewFrame];
+    self.viewControllers = @[self.rootViewController];
     [self.rootViewController.view.superview addSubview:self.drawerController.view];
     [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
 }
@@ -451,15 +380,6 @@
             }
             
             self.isAnimating = YES;
-            [self setBarButtonItemsEnabled:NO];
-            
-            if ([self drawerViewIsDetached])
-            {
-                self.cachedSuperView = nil;
-                [self.drawerController.view removeFromSuperview];
-                
-                [self moveMenuViewToBack];
-            }
             
             if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerWillPresentDrawer:)])
             {
@@ -474,11 +394,9 @@
                  }
                  completion:^(BOOL finished)
                  {
-                     [self swapBarButtonItemsForViewController:self.drawerController animated:YES];
                      [self swapTitleForViewController:self.drawerController animated:YES];
-                     [self cacheRootViewAndHide];
-
-                     [self setBarButtonItemsEnabled:YES];
+                     self.viewControllers = @[self.drawerController];
+                     
                      self.isAnimating = NO;
                      self.presentationState = VDNavigationControllerPresentationStateOpen;
                      
@@ -491,15 +409,11 @@
             else
             {
                 self.rootViewController.view.frame = [self dismissedViewFrame];
-                [self swapBarButtonItemsForViewController:self.drawerController animated:NO];
                 [self swapTitleForViewController:self.drawerController animated:NO];
-                [self cacheRootViewAndHide];
-                
-                [self addChildViewController:self.drawerController];
+                self.viewControllers = @[self.drawerController];
                 
                 self.presentationState = VDNavigationControllerPresentationStateOpen;
                 
-                [self setBarButtonItemsEnabled:YES];
                 self.isAnimating = NO;
                 
                 if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidPresentDrawer:)])
@@ -530,7 +444,7 @@
                 [self.vdNavigationControllerDelegate vdNavigationControllerWillDismissDrawer:self];
             }
             
-            [self.cachedSuperView addSubview:self.rootViewController.view];
+            [self.drawerController.view addSubview:self.rootViewController.view];
             
             if (animated)
             {
@@ -540,9 +454,10 @@
                 }
                 completion:^(BOOL finished)
                 {
-                    [self addDrawerViewAndMoveToBack];
-                    [self swapBarButtonItemsForViewController:self.rootViewController animated:YES];
                     [self swapTitleForViewController:self.rootViewController animated:YES];
+                    [self.rootViewController.view removeFromSuperview];
+                    self.viewControllers = @[self.rootViewController];
+                    [self addDrawerViewAndMoveToBack];
 
                     self.isAnimating = NO;
                     self.presentationState = VDNavigationControllerPresentationStateClosed;
@@ -557,7 +472,6 @@
             {
                 self.rootViewController.view.frame = [self presentedViewFrame];
                 [self addDrawerViewAndMoveToBack];
-                [self swapBarButtonItemsForViewController:self.rootViewController animated:NO];
                 [self swapTitleForViewController:self.rootViewController animated:NO];
                 
                 self.presentationState = VDNavigationControllerPresentationStateClosed;
@@ -586,66 +500,11 @@
             self.rootViewController.title = self.cachedTitle;
         }
         
-        if (completion) {
+        if (completion)
+        {
             completion();
         }
     }];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - UINavigationController Methods
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    if (self.presentationState == VDNavigationControllerPresentationStateOpen) {
-        
-        if (self.cachedSuperView) {
-            [self.cachedSuperView addSubview:self.rootViewController.view];
-        }
-        self.rootViewController.view.userInteractionEnabled = NO;
-        self.rootViewController.view.hidden = YES;
-        [self addDrawerViewAndMoveToBack];
-    }
-    
-    [super pushViewController:viewController animated:animated];
-}
-
-- (UIViewController*)popViewControllerAnimated:(BOOL)animated
-{
-    UIViewController *poppedViewController = [super popViewControllerAnimated:animated];
-    
-    if (self.viewControllers.count <= 2 && self.presentationState == VDNavigationControllerPresentationStateOpen)
-    {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC) ), dispatch_get_main_queue(), ^
-        {
-            [self moveMenuViewToBack];
-            [self cacheRootViewAndHide];
-            self.rootViewController.view.userInteractionEnabled = YES;
-            self.rootViewController.view.hidden = NO;
-            self.rootViewController.view.frame = [self dismissedViewFrame];
-        });
-    }
-    
-    return poppedViewController;
-}
-
-- (NSArray*)popToRootViewControllerAnimated:(BOOL)animated
-{
-    NSArray *poppedControllers = [super popToRootViewControllerAnimated:animated];
-    
-    if (self.presentationState == VDNavigationControllerPresentationStateOpen)
-    {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((UINavigationControllerHideShowBarDuration + 0.4f) * NSEC_PER_SEC * animated) ), dispatch_get_main_queue(), ^
-        {
-            [self moveMenuViewToBack];
-            [self cacheRootViewAndHide];
-            self.rootViewController.view.userInteractionEnabled = YES;
-            self.rootViewController.view.hidden = NO;
-            self.rootViewController.view.frame = [self dismissedViewFrame];
-        });
-    }
-    return poppedControllers;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,6 +519,12 @@
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     self.isAnimating = NO;
+    
+    if (viewController == self.rootViewController && self.viewControllers.count == 0 && self.presentationState == VDNavigationControllerPresentationStateClosed)
+    {
+        [self.rootViewController.view.superview addSubview:self.drawerController.view];
+        [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
+    }
 }
 
 @end

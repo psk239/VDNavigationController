@@ -39,7 +39,7 @@
                 skipController = (VDSkipViewController*)controller;
                 
                 NSMutableArray *mutableControllers = self.navigationController.viewControllers.mutableCopy;
-                [mutableControllers removeObject:controller];
+                [mutableControllers removeObject:skipController];
                 self.navigationController.viewControllers = mutableControllers;
                 break;
             }
