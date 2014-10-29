@@ -9,8 +9,8 @@
 
 Pod::Spec.new do |s|
   s.name             = "VDNavigationController"
-  s.version          = "0.1.5"
-  s.summary          = "A vertically animating Navigation Controller for iOS."
+  s.version          = "0.1.6"
+  s.summary          = "A vertically animating Navigation Drawer for iOS."
   s.description      = <<-DESC
                         VDNavigationController
                         ======================
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
 
                         #Summary
 
-                        This is a vertically presenting menu controller that displays top-level view controllers to the user. You can use whatever style you wish to layout your menu (i.e. Subclass VDDrawerViewController).
+                        This is a vertically presenting menu drawer that displays top-level view controllers to the user. You can use whatever style you wish to layout your menu (you just need to subclass VDDrawerViewController).
 
                         #License
 

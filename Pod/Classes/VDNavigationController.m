@@ -190,12 +190,6 @@
     self.isAnimating = NO;
 }
 
-- (void)dealloc
-{
-
-}
-
-
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -361,7 +355,8 @@
     [self.rootViewController.view.superview sendSubviewToBack:self.drawerController.view];
 }
 
-- (void)addDrawerViewAndMoveToBack {
+- (void)addDrawerViewAndMoveToBack
+{
     [self.view addSubview:self.drawerController.view];
     [self.view sendSubviewToBack:self.drawerController.view];
 }
@@ -482,12 +477,11 @@
             else
             {
                 self.rootViewController.view.frame = [self presentedViewFrame];
-                [self addDrawerViewAndMoveToBack];
                 [self swapTitleForViewController:self.rootViewController animated:NO];
-                
-                self.presentationState = VDNavigationControllerPresentationStateClosed;
+                [self addDrawerViewAndMoveToBack];
                 
                 self.isAnimating = NO;
+                self.presentationState = VDNavigationControllerPresentationStateClosed;
                 
                 if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)])
                 {
