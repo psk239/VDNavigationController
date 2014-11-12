@@ -498,7 +498,9 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    self.isAnimating = YES;
+    if (![self rootViewControllerViewHasLoaded]) {
+        self.isAnimating = YES;
+    }
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
