@@ -386,9 +386,30 @@
             
             if (animated)
             {
-                [UIView animateWithDuration:0.25 animations:^
+                UIView *view = self.rootViewController.view;
+                __block UIView *superview = view.superview;
+                
+                __block BOOL cachedAutoresizingMask = view.translatesAutoresizingMaskIntoConstraints;
+                
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f]];
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f]];
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+                
+                NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+                [superview addConstraint:topConstraint];
+                
+                NSLayoutConstraint *offscreenConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+                
+                
+                [UIView animateWithDuration:0.25f animations:^
                  {
-                     self.rootViewController.view.frame = [self dismissedViewFrame];
+                     [superview removeConstraint:topConstraint];
+                     [superview addConstraint:offscreenConstraint];
+                     
+                     [superview layoutIfNeeded];
+                     
                      if (self.showMenuAnimationBlock)
                      {
                          self.showMenuAnimationBlock();
@@ -396,6 +417,8 @@
                  }
                  completion:^(BOOL finished)
                  {
+                     view.translatesAutoresizingMaskIntoConstraints = cachedAutoresizingMask;
+                     
                      [self swapTitleForViewController:self.drawerController animated:YES];
                      self.viewControllers = @[self.drawerController];
                      
@@ -450,29 +473,49 @@
             
             if (animated)
             {
+                UIView *view = self.rootViewController.view;
+                __block UIView *superview = view.superview;
+                
+                __block BOOL cachedAutoresizingMask = view.translatesAutoresizingMaskIntoConstraints;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeLeft multiplier:1.0f constant:0.0f]];
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeRight multiplier:1.0f constant:0.0f]];
+                [superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f]];
+                
+                NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeTop multiplier:1.0f constant:0.0f];
+                
+                NSLayoutConstraint *offscreenConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+                [superview addConstraint:offscreenConstraint];
+                
                 [UIView animateWithDuration:0.25f animations:^
-                {
-                    self.rootViewController.view.frame = [self presentedViewFrame];
-                    if (self.hideMenuAnimationBlock)
-                    {
-                        self.hideMenuAnimationBlock();
-                    }
-                }
-                completion:^(BOOL finished)
-                {
-                    [self swapTitleForViewController:self.rootViewController animated:YES];
-                    [self.rootViewController.view removeFromSuperview];
-                    self.viewControllers = @[self.rootViewController];
-                    [self addDrawerViewAndMoveToBack];
-
-                    self.isAnimating = NO;
-                    self.presentationState = VDNavigationControllerPresentationStateClosed;
-                    
-                    if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)])
-                    {
-                        [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
-                    }
-                }];
+                 {
+                     [superview removeConstraint:offscreenConstraint];
+                     [superview addConstraint:topConstraint];
+                     [superview layoutIfNeeded];
+                     
+                     if (self.hideMenuAnimationBlock)
+                     {
+                         self.hideMenuAnimationBlock();
+                     }
+                 }
+                 completion:^(BOOL finished)
+                 {
+                     view.translatesAutoresizingMaskIntoConstraints = cachedAutoresizingMask;
+                     
+                     [self swapTitleForViewController:self.rootViewController animated:YES];
+                     [self.rootViewController.view removeFromSuperview];
+                     self.viewControllers = @[self.rootViewController];
+                     [self addDrawerViewAndMoveToBack];
+                     
+                     self.isAnimating = NO;
+                     self.presentationState = VDNavigationControllerPresentationStateClosed;
+                     
+                     if (self.vdNavigationControllerDelegate && [self.vdNavigationControllerDelegate respondsToSelector:@selector(vdNavigationControllerDidDismissDrawer:)])
+                     {
+                         [self.vdNavigationControllerDelegate vdNavigationControllerDidDismissDrawer:self];
+                     }
+                 }];
             }
             else
             {
