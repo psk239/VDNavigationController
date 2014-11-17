@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "VDNavigationController"
-  s.version          = "0.1.7"
+  s.version          = "0.1.8"
   s.summary          = "A vertically animating Navigation Drawer for iOS."
   s.description      = <<-DESC
                         VDNavigationController
