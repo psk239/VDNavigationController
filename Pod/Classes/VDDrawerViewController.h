@@ -21,20 +21,4 @@
  */
 @property (nonatomic, weak) VDNavigationController *vdNavController;
 
-/**
- *  The leftBarButtonItems that the VDDrawerViewController presents when the menu is presented
- *  @warning This is a required method. Subclasses must implement this method. Do not call super. Nil is a valid return value
- *
- *  @return An array of UIBarButtonItems or nil
- */
-- (NSArray*)leftBarButtonItems DEPRECATED_ATTRIBUTE;
-
-/**
- *  The rightBarButtonItems that the VDDrawerViewController presents when the menu is presented
- *  @warning This is a required method. Subclasses must implement this method. Do not call super. Nil is a valid return value
- *
- *  @return An array of UIBarButtonItems or nil
- */
-- (NSArray*)rightBarButtonItems DEPRECATED_ATTRIBUTE;
-
 @end
