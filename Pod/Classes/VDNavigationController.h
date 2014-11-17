@@ -75,6 +75,11 @@ typedef void (^VDNavigationControllerAnimationBlock)(void);
 @property (nonatomic) VDNavigationControllerPresentationState presentationState;
 
 /**
+ *  The amount of time (in seconds) it takes to present or dismiss the drawer. Default is 0.25 sec
+ */
+@property (nonatomic) NSTimeInterval drawerAnimationDuration;
+
+/**
  *  When the Drawer is initially added to the UINavigationController's view, it sometimes is misaligned vertically. If you notice the drawer
  *  vertically jumps when it is initially presented, adjust this property as needed to get the desired layout.
  */

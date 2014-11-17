@@ -172,6 +172,8 @@
         self.rootViewController = thisRootController;
         
         _delegate = self.delegateMultiplexer;
+        
+        self.drawerAnimationDuration = 0.25f;
         [self.delegateMultiplexer addTarget:self];
         
         self.pendingPresentationState = VDNavigationControllerPresentationStateNone;
@@ -403,7 +405,7 @@
                 NSLayoutConstraint *offscreenConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
                 
                 
-                [UIView animateWithDuration:0.25f animations:^
+                [UIView animateWithDuration:self.drawerAnimationDuration animations:^
                  {
                      [superview removeConstraint:topConstraint];
                      [superview addConstraint:offscreenConstraint];
@@ -488,7 +490,7 @@
                 NSLayoutConstraint *offscreenConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
                 [superview addConstraint:offscreenConstraint];
                 
-                [UIView animateWithDuration:0.25f animations:^
+                [UIView animateWithDuration:self.drawerAnimationDuration animations:^
                  {
                      [superview removeConstraint:offscreenConstraint];
                      [superview addConstraint:topConstraint];
